@@ -175,7 +175,7 @@
   word-break: break-all;
 }
 p {
-  margin: 20px;
+  margin: 20px 10px 0 10px;
 }
 .section_rightText {
   margin-top: 24px;
@@ -192,7 +192,28 @@ p {
   color: #68bfd6;
 }
 .section_list_etc {
-  height: 60px;
-  background-color: #68bfd6;
+  display: flex;
+  justify-content: space-between;
   border-radius: 35px;
+}
+.section_rigthbtn {
+  border: 1px solid #68bfd6;
+  color: #68bfd6;
+  width: 190px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 33px;
+  margin: 10px 10px 13px 0;
+  font-size: 16px;
+  line-height: 20px;
+  outline: none;
+  background: transparent;
+}
+.lection_input {
+  width: 80%;
+  height: 30px;
+  font-size: 1rem;
+  border: 1px solid grey;
+  border-radius: 0.25rem;
+  margin-left: 10px;
 }
