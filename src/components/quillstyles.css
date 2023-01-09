@@ -1,6 +1,7 @@
 .ql-editor {
   min-height: 200px;
   max-width: 100vw;
+  padding: 10px 15px 40px 15px !important;
 }
 
 .ql-editor img {
@@ -19,6 +20,7 @@
 
 .ql-toolbar.ql-snow .ql-formats {
   margin-right: 0;
+  display: flex !important;
 }
 
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before {
@@ -33,7 +35,7 @@
 
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before {
   content: "Huge";
-  font-size: 18px;
+  font-size: 50px;
 }
 .ql-container.ql-disabled .ql-tooltip {
   visibility: hidden;
@@ -48,4 +50,15 @@
 .ql-editor {
   min-height: 0;
   max-width: 100vw;
+}
+.ql-container.ql-snow {
+  border: none !important;
+}
+.ql-toolbar.ql-snow {
+  border: none !important;
+}
+.ql-snow.ql-toolbar button,
+.ql-snow .ql-toolbar button {
+  width: 50px !important;
+  height: 50px !important;
 }

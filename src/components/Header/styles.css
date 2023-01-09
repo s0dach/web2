@@ -3,9 +3,13 @@
   display: flex;
   justify-content: space-between;
   margin: 0 20px 0 20px;
-  max-width: 100%;
+  margin-left: 20px;
+  width: calc(100% - 40px);
   height: 70px;
   border-radius: 0px 0px 35px 35px;
+  top: 0;
+  z-index: 100;
+  position: fixed;
 }
 .header_icon {
   width: 50px;
@@ -83,7 +87,7 @@
 .section {
   display: flex;
   justify-content: space-between;
-  margin: 10px 20px 0 20px;
+  margin: 80px 20px 0 20px;
 }
 .section_left {
   background: #ffffff;
@@ -174,7 +178,7 @@
   border-radius: 35px;
   word-break: break-all;
 }
-p {
+span {
   margin: 20px 10px 0 10px;
 }
 .section_rightText {
@@ -216,4 +220,18 @@ p {
   border: 1px solid grey;
   border-radius: 0.25rem;
   margin-left: 10px;
+}
+.buttonDiv {
+  display: flex;
+  justify-content: space-around;
+}
+.addButton {
+  border: #68bfd6;
+  width: 30px;
+  height: 30px;
+  background-color: #68bfd6;
+  margin: 10px 0 10px 0;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: #ffffff;
 }

@@ -1,7 +1,9 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import "./styles.css";
 
 export const Header = () => {
+  const params = useParams();
   return (
     <div className="header">
       <div className="header_left">
@@ -16,7 +18,9 @@ export const Header = () => {
         </div>
       </div>
       <div className="header_right">
-        <button className="header_button">Запустить сессию</button>
+        <button onClick={() => console.log(params)} className="header_button">
+          Запустить сессию
+        </button>
       </div>
     </div>
   );
