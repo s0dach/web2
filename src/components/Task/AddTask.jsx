@@ -68,7 +68,6 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
   const addTask = async (e) => {
     setIsLoading(true);
     const htmlTooMarkdown = htmlToMarkdown(inputValue);
-    // const boldText = htmlTooMarkdown.replace("**", "*");
     const firstFinishedTextTest = htmlTooMarkdown
       .split("![](")
       .join("<img src=");
@@ -78,10 +77,6 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
     const firstFinishedText = lastFinishedTextTest
       .split("![](")
       .join("<img src=");
-    // const boldText = firstFinishedText.split("**").join("!!!");
-    // const italicText = boldText.split("*").join("@@");
-    // const boldFinish = italicText.split("!!!").join("**");
-    // const italicFinish = boldFinish.split("@@").join("*");
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
     const obj = {
       listId: activeItem.id,
@@ -114,6 +109,7 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
       setFile("Вложений нет");
       setIsLoading(false);
       setActive(false);
+      setInputValue("");
     }, "2000");
   };
 

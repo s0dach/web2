@@ -22,23 +22,14 @@
   display: flex;
   align-items: center;
   color: #68bfd6;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 29px;
   margin-left: 24px;
 }
 .header_icon1 {
   width: 50px;
   height: 50px;
-  border: 1px solid #68bfd6;
   margin: 10px 0 10px 13px;
-  border-radius: 50%;
-}
-.header_icon2 {
-  width: 50px;
-  height: 50px;
-  border: 1px solid #68bfd6;
-  margin: 10px 0 10px 13px;
-  border-radius: 50%;
 }
 .header_section {
   display: flex;
@@ -54,10 +45,34 @@
   border-radius: 33px;
   margin: 10px 0 10px 0;
   color: #fff;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 20px;
 }
-
+.header_buttondis {
+  width: 280px;
+  border: none;
+  display: inline-block;
+  text-align: center;
+  background: #b92c2c;
+  border-radius: 33px;
+  margin: 10px 0 10px 0;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 20px;
+}
+.header_buttonEditable {
+  width: 280px;
+  border: none;
+  display: inline-block;
+  text-align: center;
+  background: #68bfd6;
+  border-radius: 33px;
+  margin: 10px 0 10px 0;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 20px;
+  opacity: 0.4;
+}
 .header_icons {
   display: flex;
 }
@@ -70,7 +85,7 @@
   border-radius: 33px;
   margin: 10px 0 10px 0;
   color: #fff;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 20px;
 }
 .header_left {
@@ -115,14 +130,14 @@
 .section_text {
   margin-top: 24px;
   margin-left: 22px;
-  font-size: 9px;
+  font-size: 0.56rem;
   line-height: 11px;
   text-transform: uppercase;
 }
 .section_activelectname {
   margin-left: 22px;
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 1.125rem;
   line-height: 24px;
   color: #68bfd6;
 }
@@ -134,7 +149,7 @@
 .section_dislectname {
   margin-left: 22px;
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 1.125rem;
   line-height: 24px;
   color: #707070;
 }
@@ -173,7 +188,7 @@
 }
 .section_list {
   background: #ffffff;
-  margin: 0 10px 10px 10px;
+  margin: 0 10px 0 10px;
   border: 1px solid #fff;
   border-radius: 35px;
   word-break: break-all;
@@ -184,14 +199,14 @@ span {
 .section_rightText {
   margin-top: 24px;
   margin-left: 20px;
-  font-size: 9px;
+  font-size: 0.56rem;
   line-height: 11px;
   text-transform: uppercase;
 }
 .section_number {
   margin-left: 22px;
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 1.125rem;
   line-height: 24px;
   color: #68bfd6;
 }
@@ -208,10 +223,15 @@ span {
   text-align: center;
   border-radius: 33px;
   margin: 10px 10px 13px 0;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 20px;
   outline: none;
   background: transparent;
+}
+.header_iconTrash {
+  width: 50px;
+  height: 50px;
+  margin: 10px 13px 10px 0;
 }
 .lection_input {
   width: 80%;
@@ -234,4 +254,9 @@ span {
   border-radius: 50%;
   font-size: 1.5rem;
   color: #ffffff;
+}
+/* снести вот это */
+.dp {
+  text-align: center;
+  font-size: 2rem;
 }
