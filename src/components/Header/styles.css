@@ -88,6 +88,18 @@
   font-size: 1rem;
   line-height: 20px;
 }
+.header_activeNone {
+  width: 163px;
+  border: none;
+  display: none;
+  text-align: center;
+  background: #68bfd6;
+  border-radius: 33px;
+  margin: 10px 0 10px 0;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 20px;
+}
 .header_left {
   display: flex;
   width: 50%;

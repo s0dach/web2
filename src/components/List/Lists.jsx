@@ -10,7 +10,7 @@ export const Lists = () => {
   const params = useParams();
   const [lists, setLists] = React.useState(null);
   const [visiblePopup, setVisiblePopup] = React.useState(false);
-  const [editable, setEditable] = React.useState(null);
+  const [edit, setEdit] = React.useState(null);
   const [inputValue, setInputValue] = React.useState("");
   const [lectionName, setLectionName] = React.useState("");
   const [active, setActive] = React.useState(null);
@@ -21,8 +21,9 @@ export const Lists = () => {
       .then(({ data }) => {
         setLectionName(data.name);
         setActive(data.active);
+        setEdit(data.editable);
       });
-  }, [params.id, active]);
+  }, [params.id, active, edit]);
 
   React.useEffect(() => {
     axios
@@ -30,7 +31,7 @@ export const Lists = () => {
       .then(({ data }) => {
         setLists(data);
       });
-  }, [active]);
+  }, [active, edit]);
 
   const onAdd = (obj) => {
     const newList = [...lists, obj];
@@ -73,8 +74,8 @@ export const Lists = () => {
   return (
     <>
       <Header
-        editable={editable}
-        setEditable={setEditable}
+        edit={edit}
+        setEdit={setEdit}
         active={active}
         setActive={setActive}
         lectionName={lectionName}
@@ -84,7 +85,7 @@ export const Lists = () => {
           <div className="section_text">Активные</div>
           {lists
             ? lists.map((list) =>
-                list.active ? (
+                list.active || list.editable ? (
                   <div
                     onClick={() => navigate(`/posts/${list.id}`)}
                     className="section_activelectname"
@@ -99,7 +100,7 @@ export const Lists = () => {
           <div className="section_text">Доступные</div>
           {lists
             ? lists.map((list) =>
-                !list.active ? (
+                !list.active && !list.editable ? (
                   <div
                     onClick={() => navigate(`/posts/${list.id}`)}
                     className="section_dislectname"
@@ -133,7 +134,7 @@ export const Lists = () => {
           <button className="section_helpbtn">Инструкция сервиса</button>
         </div>
         <Tasks
-          editable={editable}
+          editable={edit}
           lists={lists}
           setLists={setLists}
           onAddTask={onAddTask}

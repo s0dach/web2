@@ -3,13 +3,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import "./styles.css";
 
-export const Header = ({
-  active,
-  setActive,
-  lectionName,
-  editable,
-  setEditable,
-}) => {
+export const Header = ({ active, setActive, lectionName, edit, setEdit }) => {
   const params = useParams();
 
   const startLection = () => {
@@ -30,24 +24,30 @@ export const Header = ({
       active: false,
     });
     setActive(false);
-    setEditable(true);
+    setEdit(true);
   };
   const closeEdit = () => {
     axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
       editable: false,
+      active: false,
     });
-    setEditable(false);
+    setActive(false);
+    setEdit(false);
   };
   return (
     <div className="header">
       <div className="header_left">
         <div className="header_icon"></div>
-        <button className="header_active">Активно</button>
+        {active ? (
+          <button className="header_active">Активно</button>
+        ) : (
+          <button className="header_activeNone"></button>
+        )}
       </div>
       <div className="header_section">
         <div className="header_text">{lectionName}</div>
         <div className="header_icons">
-          {!editable ? (
+          {!edit ? (
             <div className="header_icon1" onClick={onEdit}>
               <svg
                 width="47"
@@ -96,8 +96,8 @@ export const Header = ({
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M28.2692 18H18.1154C17.5631 18 17.1154 18.4477 17.1154 19V28.3846C17.1154 28.9369 17.5631 29.3846 18.1154 29.3846H19.7308V23.6154C19.7308 21.9585 21.0739 20.6154 22.7308 20.6154H29.2692V19C29.2692 18.4477 28.8215 18 28.2692 18ZM31.2692 20.6154H32.8846C34.5415 20.6154 35.8846 21.9585 35.8846 23.6154V33C35.8846 34.6569 34.5415 36 32.8846 36H22.7308C21.0739 36 19.7308 34.6569 19.7308 33V31.3846H18.1154C16.4585 31.3846 15.1154 30.0415 15.1154 28.3846V19C15.1154 17.3431 16.4585 16 18.1154 16H28.2692C29.9261 16 31.2692 17.3431 31.2692 19V20.6154ZM22.7308 22.6154H32.8846C33.4369 22.6154 33.8846 23.0631 33.8846 23.6154V33C33.8846 33.5523 33.4369 34 32.8846 34H22.7308C22.1785 34 21.7308 33.5523 21.7308 33V23.6154C21.7308 23.0631 22.1785 22.6154 22.7308 22.6154Z"
                 fill="#68BFD6"
               />
@@ -107,7 +107,7 @@ export const Header = ({
         </div>
       </div>
       <div className="header_right">
-        {!editable ? (
+        {!edit ? (
           !active ? (
             <button onClick={startLection} className="header_button">
               Запустить сессию
