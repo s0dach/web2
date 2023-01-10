@@ -71,6 +71,23 @@ export const Lists = () => {
     });
     setLists(newList);
   };
+
+  const onRemoveTask = (listId, taskId) => {
+    if (window.confirm("Подтвердить удаление?")) {
+      const newList = lists.map((item) => {
+        if (item.id === listId) {
+          item.tasks = item.tasks.filter((task) => task.id !== taskId);
+        }
+        return item;
+      });
+      setLists(newList);
+      axios.delete("http://95.163.234.208:3500/tasks/" + taskId).catch((e) => {
+        alert("Не удалось удалить задачу");
+        console.log(e);
+      });
+    }
+  };
+
   return (
     <>
       <Header
@@ -134,6 +151,7 @@ export const Lists = () => {
           <button className="section_helpbtn">Инструкция сервиса</button>
         </div>
         <Tasks
+          onRemoveTask={onRemoveTask}
           editable={edit}
           lists={lists}
           setLists={setLists}

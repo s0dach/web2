@@ -5,7 +5,13 @@ import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { Task } from "./Task";
 
-export const Tasks = ({ onAddTask, lists, setLists, editable }) => {
+export const Tasks = ({
+  onAddTask,
+  lists,
+  setLists,
+  editable,
+  onRemoveTask,
+}) => {
   const [addTaskActive, setAddTaskActive] = React.useState(false);
   const [activeItem, setActiveItem] = React.useState(null);
   const location = useLocation();
@@ -25,7 +31,7 @@ export const Tasks = ({ onAddTask, lists, setLists, editable }) => {
       setActiveItem(list);
     }
   }, [lists, location, params.id, setActiveItem]);
-
+  console.log(activeItem);
   return (
     <>
       <div className="section_lection">
@@ -39,6 +45,9 @@ export const Tasks = ({ onAddTask, lists, setLists, editable }) => {
           activeItem.tasks ? (
             activeItem.tasks.map((c) => (
               <Task
+                onRemoveTask={onRemoveTask}
+                listId={c.listId}
+                id={c.id}
                 editable={editable}
                 taskText={c.text}
                 setAddTaskActive={setAddTaskActive}

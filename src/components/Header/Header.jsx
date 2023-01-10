@@ -38,7 +38,7 @@ export const Header = ({ active, setActive, lectionName, edit, setEdit }) => {
     <div className="header">
       <div className="header_left">
         <div className="header_icon"></div>
-        {active ? (
+        {active || edit ? (
           <button className="header_active">Активно</button>
         ) : (
           <button className="header_activeNone"></button>

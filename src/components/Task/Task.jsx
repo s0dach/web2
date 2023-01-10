@@ -4,7 +4,14 @@ import React from "react";
 import ReactQuill from "react-quill";
 import { useParams } from "react-router-dom";
 
-export const Task = ({ taskText, setAddTaskActive, editable }) => {
+export const Task = ({
+  taskText,
+  setAddTaskActive,
+  editable,
+  listId,
+  id,
+  onRemoveTask,
+}) => {
   const params = useParams();
   const [edit, setEdit] = React.useState(null);
   React.useEffect(() => {
@@ -50,7 +57,10 @@ export const Task = ({ taskText, setAddTaskActive, editable }) => {
           {!edit ? (
             <button className="section_rigthbtn">Публиковать</button>
           ) : (
-            <div className="header_iconTrash">
+            <div
+              className="header_iconTrash"
+              onClick={() => onRemoveTask(listId, id)}
+            >
               <svg
                 width="47"
                 height="47"
