@@ -200,7 +200,15 @@
 }
 .section_list {
   background: #ffffff;
-  margin: 0 10px 0 10px;
+  margin: 0 10px 10px 10px;
+  border: 1px solid #fff;
+  border-radius: 35px;
+  word-break: break-all;
+}
+.section_listComplete {
+  opacity: 0.5;
+  background: #ffffff;
+  margin: 0 10px 10px 10px;
   border: 1px solid #fff;
   border-radius: 35px;
   word-break: break-all;
@@ -262,7 +270,7 @@ span {
   width: 30px;
   height: 30px;
   background-color: #68bfd6;
-  margin: 10px 0 10px 0;
+  margin: 0 0 10px 0;
   border-radius: 50%;
   font-size: 1.5rem;
   color: #ffffff;

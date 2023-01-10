@@ -9,10 +9,16 @@ export const Task = ({
   setAddTaskActive,
   editable,
   listId,
-  id,
+  taskId,
   onRemoveTask,
+  documentId,
 }) => {
+  const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
+  const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
+  const uriDoc = `https://api.telegram.org/bot${token}/sendDocument`;
+  const uriApiPhoto = `https://api.telegram.org/bot${token}/sendPhoto`;
   const params = useParams();
+
   const [edit, setEdit] = React.useState(null);
   React.useEffect(() => {
     axios
@@ -22,17 +28,89 @@ export const Task = ({
       });
   }, [params.id, editable]);
 
+  const sendLection = async (e) => {
+    try {
+      let data = [];
+      await axios
+        .get(`http://95.163.234.208:3500/lists/${listId}`)
+        .then((res) => {
+          data = res.data.usersId;
+        });
+      await axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
+        active: 1,
+      });
+      const boldText = taskText.split("**").join("!!!");
+      const italicText = boldText.split("*").join("@@@");
+      const boldTextFinish = italicText.split("!!!").join("*");
+      const allBItext = boldTextFinish.split("@@@").join("_");
+      const allFixText = allBItext.replace(/\\/g, "");
+      const firstFinishedTextTest = allFixText.split("![](").join("<img src=");
+      const lastFinishedTextTest = firstFinishedTextTest
+        .split(".png)")
+        .join(".png>");
+      const firstFinishedText = lastFinishedTextTest
+        .split("![](")
+        .join("<img src=");
+      const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
+      const links = lastFinishedText.match(/https:\/\/[^\sZ]+/i);
+      const first_link = links?.[0];
+      const finishMyText = lastFinishedText.replace(
+        "*Вложения:**",
+        "Вложения: "
+      );
+      data.forEach((ids) => {
+        if (first_link !== undefined) {
+          // Обрезаем конечный текст с картинкой
+
+          const firstFinishText = lastFinishedText.replace(
+            "<img src=" + first_link,
+            ""
+          );
+
+          const lastFinishText = firstFinishText.replace(">" + first_link, "");
+          const finishedText = lastFinishText.replace("<span><span>", "");
+          axios.post(uriApiPhoto, {
+            chat_id: Number(ids),
+            photo: first_link,
+            caption: finishedText,
+            parse_mode: "Markdown",
+          });
+        }
+        if (first_link === undefined) {
+          if (documentId !== 0) {
+            axios.post(uriDoc, {
+              chat_id: Number(ids),
+              parse_mode: "Markdown",
+              caption: finishMyText,
+              document: `https://drive.google.com/u/0/uc?id=${documentId}&export=download`,
+            });
+          }
+          if (documentId === 0) {
+            axios.post(uriApiMessage, {
+              chat_id: Number(ids),
+              parse_mode: "Markdown",
+              text: lastFinishedText,
+            });
+          }
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <div className="buttonDiv">
-        <button
-          onClick={() => {
-            setAddTaskActive(true);
-          }}
-          className="addButton"
-        >
-          +
-        </button>
+        {edit && (
+          <button
+            onClick={() => {
+              setAddTaskActive(true);
+            }}
+            className="addButton"
+          >
+            +
+          </button>
+        )}
       </div>
       <div className="section_list">
         <span>
@@ -55,11 +133,13 @@ export const Task = ({
             </svg>
           </div>
           {!edit ? (
-            <button className="section_rigthbtn">Публиковать</button>
+            <button className="section_rigthbtn" onClick={sendLection}>
+              Публиковать
+            </button>
           ) : (
             <div
               className="header_iconTrash"
-              onClick={() => onRemoveTask(listId, id)}
+              onClick={() => onRemoveTask(listId, taskId)}
             >
               <svg
                 width="47"

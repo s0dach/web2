@@ -16,7 +16,7 @@ export const Tasks = ({
   const [activeItem, setActiveItem] = React.useState(null);
   const location = useLocation();
   const params = useParams();
-
+  console.log(activeItem);
   React.useEffect(() => {
     axios
       .get("http://95.163.234.208:3500/lists?_expand=color&_embed=tasks")
@@ -31,7 +31,6 @@ export const Tasks = ({
       setActiveItem(list);
     }
   }, [lists, location, params.id, setActiveItem]);
-  console.log(activeItem);
   return (
     <>
       <div className="section_lection">
@@ -45,9 +44,10 @@ export const Tasks = ({
           activeItem.tasks ? (
             activeItem.tasks.map((c) => (
               <Task
+                documentId={c.documentId}
                 onRemoveTask={onRemoveTask}
                 listId={c.listId}
-                id={c.id}
+                taskId={c.id}
                 editable={editable}
                 taskText={c.text}
                 setAddTaskActive={setAddTaskActive}
@@ -67,9 +67,13 @@ export const Tasks = ({
       </div>
       <div className="section_right">
         <div className="section_rightText">количество участников</div>
-        <div className="section_number">NAN</div>
+        <div className="section_number">
+          {activeItem ? activeItem.usersId.length : "NAN"}
+        </div>
         <div className="section_rightText">Опубликовано</div>
-        <div className="section_number">NAN/NAN</div>
+        <div className="section_number">
+          NAN/{activeItem ? activeItem.tasks.length : 0}
+        </div>
       </div>
     </>
   );
