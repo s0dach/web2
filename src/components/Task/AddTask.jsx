@@ -80,6 +80,7 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
     const obj = {
       listId: activeItem.id,
+      active: "section_rigthbtn",
       text:
         file === "Вложений нет"
           ? lastFinishedText

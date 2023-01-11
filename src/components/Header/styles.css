@@ -27,9 +27,10 @@
   margin-left: 24px;
 }
 .header_icon1 {
+  cursor: pointer;
   width: 50px;
   height: 50px;
-  margin: 10px 0 10px 13px;
+  margin: 10px 0 10px 10px;
 }
 .header_section {
   display: flex;
@@ -37,6 +38,7 @@
   justify-content: space-between;
 }
 .header_button {
+  cursor: pointer;
   width: 280px;
   border: none;
   display: inline-block;
@@ -49,6 +51,7 @@
   line-height: 20px;
 }
 .header_buttondis {
+  cursor: pointer;
   width: 280px;
   border: none;
   display: inline-block;
@@ -118,7 +121,7 @@
 }
 .section_left {
   background: #ffffff;
-  height: 750px;
+  height: 810px;
   width: 50%;
   border-radius: 33px;
   position: relative;
@@ -188,15 +191,33 @@
   display: flex;
 }
 .section_helpbtn {
-  width: 280px;
+  cursor: pointer;
+  width: 22vw;
   height: 50px;
   position: absolute;
   bottom: 0;
   margin: 10px;
   border: 1px solid #707070;
   border-radius: 25px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   text-align: center;
+  font-size: 1rem;
+  color: #707070;
+  outline: none;
+  background: transparent;
+}
+.section_helpbtn1 {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  justify-content: center;
+  color: #ffffff;
+  border-radius: 50%;
+  margin: 10px;
+  width: 30px;
+  height: 30px;
+  background: rgba(112, 112, 112, 0.5);
 }
 .section_list {
   background: #ffffff;
@@ -236,6 +257,7 @@ span {
   border-radius: 35px;
 }
 .section_rigthbtn {
+  cursor: pointer;
   border: 1px solid #68bfd6;
   color: #68bfd6;
   width: 190px;
@@ -248,7 +270,23 @@ span {
   outline: none;
   background: transparent;
 }
+
+.section_rigthbtnNone {
+  display: none;
+  border: 1px solid #68bfd6;
+  color: #68bfd6;
+  width: 190px;
+  text-align: center;
+  border-radius: 33px;
+  margin: 10px 10px 13px 0;
+  font-size: 1rem;
+  line-height: 20px;
+  outline: none;
+  background: transparent;
+}
+
 .header_iconTrash {
+  cursor: pointer;
   width: 50px;
   height: 50px;
   margin: 10px 13px 10px 0;
@@ -265,7 +303,12 @@ span {
   display: flex;
   justify-content: space-around;
 }
+.centerButtonbottom {
+  display: flex;
+  justify-content: center;
+}
 .addButton {
+  cursor: pointer;
   border: #68bfd6;
   width: 30px;
   height: 30px;

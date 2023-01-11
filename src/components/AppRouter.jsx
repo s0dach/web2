@@ -1,13 +1,30 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { AuthContext } from "../context/context";
 import { Lists } from "./List/Lists";
+import { privateRoute, publicRoute } from "./router";
 
 export const AppRouter = () => {
-  return (
+  const { isAuth, load } = React.useContext(AuthContext);
+
+  if (load) {
+    return <Lists />;
+  }
+  return isAuth ? (
     <Routes>
-      <Route path="/" element={<Lists />} />
-      <Route path="/posts" element={<Lists />} />
-      <Route path="/posts/:id" element={<Lists />} />
+      {privateRoute.map((route) => (
+        <Route key={route.path} element={route.element} path={route.path} />
+      ))}
+      {/* <Navigate to="/" replace /> */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  ) : (
+    <Routes>
+      {publicRoute.map((route) => (
+        <Route key={route.path} element={route.element} path={route.path} />
+      ))}
+      {/* <Navigate to="/login" replace /> */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };

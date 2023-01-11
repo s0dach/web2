@@ -13,17 +13,21 @@ export const Lists = () => {
   const [edit, setEdit] = React.useState(null);
   const [inputValue, setInputValue] = React.useState("");
   const [lectionName, setLectionName] = React.useState("");
+  const [complete, setComplete] = React.useState(0);
   const [active, setActive] = React.useState(null);
   // Костыль для отображения лекции
   React.useEffect(() => {
-    axios
-      .get(`http://95.163.234.208:3500/lists/${params.id}`)
-      .then(({ data }) => {
-        setLectionName(data.name);
-        setActive(data.active);
-        setEdit(data.editable);
-      });
-  }, [params.id, active, edit]);
+    if (params.id !== undefined) {
+      axios
+        .get(`http://95.163.234.208:3500/lists/${params.id}`)
+        .then(({ data }) => {
+          setLectionName(data.name);
+          setActive(data.active);
+          setEdit(data.editable);
+          setComplete(data.complete);
+        });
+    }
+  }, [params.id, active, edit, complete]);
 
   React.useEffect(() => {
     axios
@@ -72,6 +76,31 @@ export const Lists = () => {
     setLists(newList);
   };
 
+  const startLection = () => {
+    axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
+      active: true,
+    });
+    setActive(true);
+  };
+
+  const stopLection = async () => {
+    await axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
+      active: false,
+      complete: 0,
+    });
+    await lists[params.id - 1].tasks.forEach((task) => {
+      axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
+        active: "section_rigthbtn",
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, "100");
+      console.log(task);
+    });
+
+    setLists(lists);
+    setActive(false);
+  };
   const onRemoveTask = (listId, taskId) => {
     if (window.confirm("Подтвердить удаление?")) {
       const newList = lists.map((item) => {
@@ -91,6 +120,8 @@ export const Lists = () => {
   return (
     <>
       <Header
+        startLection={startLection}
+        stopLection={stopLection}
         edit={edit}
         setEdit={setEdit}
         active={active}
@@ -148,9 +179,13 @@ export const Lists = () => {
               + добавить лекцию
             </div>
           )}
-          <button className="section_helpbtn">Инструкция сервиса</button>
+          <button className="section_helpbtn">
+            <div className="section_helpbtn1">?</div>Инструкция сервиса
+          </button>
         </div>
         <Tasks
+          complete={complete}
+          setComplete={setComplete}
           onRemoveTask={onRemoveTask}
           editable={edit}
           lists={lists}

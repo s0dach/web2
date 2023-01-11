@@ -3,21 +3,17 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import "./styles.css";
 
-export const Header = ({ active, setActive, lectionName, edit, setEdit }) => {
+export const Header = ({
+  active,
+  setActive,
+  lectionName,
+  edit,
+  setEdit,
+  stopLection,
+  startLection,
+}) => {
   const params = useParams();
 
-  const startLection = () => {
-    axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
-      active: true,
-    });
-    setActive(true);
-  };
-  const stopLection = () => {
-    axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
-      active: false,
-    });
-    setActive(false);
-  };
   const onEdit = () => {
     axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
       editable: true,
@@ -37,7 +33,43 @@ export const Header = ({ active, setActive, lectionName, edit, setEdit }) => {
   return (
     <div className="header">
       <div className="header_left">
-        <div className="header_icon"></div>
+        <svg
+          width="47"
+          height="47"
+          viewBox="0 0 50 50"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ margin: "10px 74px 10px 13px" }}
+        >
+          <mask
+            id="mask0_11_265"
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width="50"
+            height="50"
+          >
+            <path
+              d="M25 0C38.8071 0 50 11.1929 50 25C50 38.8071 38.8071 50 25 50C11.1929 50 0 38.8071 0 25C0 11.1929 11.1929 0 25 0Z"
+              fill="#68BFD6"
+            ></path>
+          </mask>
+          <g mask="url(#mask0_11_265)">
+            <path
+              d="M25 0C38.8071 0 50 11.1929 50 25C50 38.8071 38.8071 50 25 50C11.1929 50 0 38.8071 0 25C0 11.1929 11.1929 0 25 0Z"
+              fill="#68BFD6"
+            ></path>
+            <circle cx="25.3846" cy="18.0769" r="10.3846" fill="white"></circle>
+            <ellipse
+              cx="25.3846"
+              cy="44.6153"
+              rx="15.7692"
+              ry="15.3846"
+              fill="white"
+            ></ellipse>
+          </g>
+        </svg>
         {active ? (
           <button className="header_active">Активно</button>
         ) : (

@@ -36,5 +36,10 @@ table {
 }
 
 .container {
+  display: flex;
+  background: #68bfd6;
   max-width: 1440px;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
 }

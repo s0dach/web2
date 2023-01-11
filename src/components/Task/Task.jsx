@@ -12,33 +12,61 @@ export const Task = ({
   taskId,
   onRemoveTask,
   documentId,
+  setComplete,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
   const uriDoc = `https://api.telegram.org/bot${token}/sendDocument`;
   const uriApiPhoto = `https://api.telegram.org/bot${token}/sendPhoto`;
   const params = useParams();
-
   const [edit, setEdit] = React.useState(null);
+  const [edit1, setEdit1] = React.useState(0);
+
   React.useEffect(() => {
-    axios
-      .get(`http://95.163.234.208:3500/lists/${params.id}`)
-      .then(({ data }) => {
-        setEdit(data.editable);
-      });
+    if (params.id !== undefined) {
+      axios
+        .get(`http://95.163.234.208:3500/lists/${params.id}`)
+        .then(({ data }) => {
+          setEdit(data.editable);
+        });
+    }
   }, [params.id, editable]);
 
+  React.useEffect(() => {
+    axios.get(`http://95.163.234.208:3500/tasks/${taskId}`).then(({ data }) => {
+      setEdit1(data.active);
+    });
+  }, [taskId, edit1]);
+
   const sendLection = async (e) => {
+    if (params.id !== undefined) {
+      await axios
+        .get(`http://95.163.234.208:3500/lists/${params.id}`)
+        .then(({ data }) => {
+          axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
+            complete: data.complete + 1,
+          });
+          setComplete(data.complete + 1);
+        });
+    }
+
     try {
       let data = [];
-      await axios
-        .get(`http://95.163.234.208:3500/lists/${listId}`)
-        .then((res) => {
-          data = res.data.usersId;
-        });
+      if (params.id !== undefined) {
+        await axios
+          .get(`http://95.163.234.208:3500/lists/${listId}`)
+          .then((res) => {
+            data = res.data.usersId;
+          });
+      }
       await axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
-        active: 1,
+        active: "section_rigthbtnNone",
       });
+      await axios
+        .get(`http://95.163.234.208:3500/tasks/${taskId}`)
+        .then(({ data }) => {
+          setEdit1(data.active);
+        });
       const boldText = taskText.split("**").join("!!!");
       const italicText = boldText.split("*").join("@@@");
       const boldTextFinish = italicText.split("!!!").join("*");
@@ -112,7 +140,13 @@ export const Task = ({
           </button>
         )}
       </div>
-      <div className="section_list">
+      <div
+        className={
+          edit1 === "section_rigthbtnNone"
+            ? "section_listComplete"
+            : "section_list"
+        }
+      >
         <span>
           <ReactQuill readOnly value={markdown(taskText)} theme={"bubble"} />
         </span>
@@ -133,7 +167,7 @@ export const Task = ({
             </svg>
           </div>
           {!edit ? (
-            <button className="section_rigthbtn" onClick={sendLection}>
+            <button className={edit1} onClick={sendLection}>
               Публиковать
             </button>
           ) : (
