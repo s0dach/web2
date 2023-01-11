@@ -3,6 +3,7 @@ import axios from "axios";
 import React from "react";
 import ReactQuill from "react-quill";
 import { useParams } from "react-router-dom";
+import { EditTask } from "./EditTask";
 
 export const Task = ({
   taskText,
@@ -13,6 +14,9 @@ export const Task = ({
   onRemoveTask,
   documentId,
   setComplete,
+  onEditTask,
+  active,
+  setActive,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -21,6 +25,8 @@ export const Task = ({
   const params = useParams();
   const [edit, setEdit] = React.useState(null);
   const [edit1, setEdit1] = React.useState(0);
+  const [editTaskId, setEditTaskId] = React.useState(null);
+  const [editTaskText, setEditTaskText] = React.useState(null);
 
   React.useEffect(() => {
     if (params.id !== undefined) {
@@ -151,7 +157,14 @@ export const Task = ({
           <ReactQuill readOnly value={markdown(taskText)} theme={"bubble"} />
         </span>
         <div className="section_list_etc">
-          <div className="header_icon1">
+          <div
+            className="header_icon1"
+            onClick={() => {
+              setEditTaskId(taskId);
+              setEditTaskText(taskText);
+              setActive(true);
+            }}
+          >
             <svg
               width="47"
               height="47"
@@ -166,6 +179,17 @@ export const Task = ({
               <circle cx="25" cy="25" r="24.5" stroke="#68BFD6" />
             </svg>
           </div>
+          {editTaskId && editTaskText !== null ? (
+            <EditTask
+              editTaskId={editTaskId}
+              editTaskText={markdown(editTaskText)}
+              setEditTaskText={setEditTaskText}
+              onEditTask={onEditTask}
+              active={active}
+              setActive={setActive}
+              listId={listId}
+            />
+          ) : undefined}
           {!edit ? (
             <button className={edit1} onClick={sendLection}>
               Публиковать

@@ -3,16 +3,20 @@ import ReactQuill, { Quill } from "react-quill";
 import "./styles.css";
 import "../quillstyles.css";
 import "react-quill/dist/quill.snow.css";
-import { ImageUpload } from "quill-image-upload";
-import axios from "axios";
 import { htmlToMarkdown } from "../Parser/Parser";
+import axios from "axios";
 
-Quill.register("modules/imageUpload", ImageUpload);
-
-export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
-  const [inputValue, setInputValue] = React.useState("");
-  const [file, setFile] = React.useState("Вложений нет");
+export const EditTask = ({
+  active,
+  setActive,
+  onEditTask,
+  editTaskId,
+  editTaskText,
+  setEditTaskText,
+  listId,
+}) => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const [file, setFile] = React.useState("Вложений нет");
 
   const editorRef = React.useRef();
 
@@ -27,7 +31,7 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
   };
 
   // кастомные значки в тулбар
-  let icons = Quill.import("ui/icons");
+  var icons = Quill.import("ui/icons");
   icons[
     "bold"
   ] = `<svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,9 +95,9 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
     }),
     []
   );
-  const addTask = async (e) => {
+  const editComplete = () => {
     setIsLoading(true);
-    const htmlTooMarkdown = htmlToMarkdown(inputValue);
+    const htmlTooMarkdown = htmlToMarkdown(editTaskText);
     const firstFinishedTextTest = htmlTooMarkdown
       .split("![](")
       .join("<img src=");
@@ -105,30 +109,17 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
       .join("<img src=");
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
     const obj = {
-      listId: activeItem.id,
-      active: "section_rigthbtn",
       text:
         file === "Вложений нет"
           ? lastFinishedText
           : lastFinishedText + `\`[Вложения:${file.name}]\``,
-      documentId: 0,
-      completed: false,
     };
-    let id = 0;
-    await axios
-      .post("http://95.163.234.208:3500/tasks", obj)
-      .then(({ data }) => {
-        id = data.id;
-        onAddTask(Number(activeItem.id), data);
-      })
-      .catch((e) => {
-        console.log(e);
-        alert("Ошибка при добавлении задачи!");
-      });
+    onEditTask(listId, obj.text, editTaskId);
+    // let id = 0;
     setTimeout(() => {
       const date = new FormData();
       date.append("file", file);
-      date.append("data", id);
+      date.append("data", editTaskId);
       axios
         .post("http://95.163.234.208:8000/upload-file-to-google-drive", date)
         .then((e) => console.log("ok"))
@@ -136,16 +127,14 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
       setFile("Вложений нет");
       setIsLoading(false);
       setActive(false);
-      setInputValue("");
     }, "2000");
   };
-
   return (
     <div className={active ? "modal active" : "modal"}>
       <div className="modal_content" onClick={(e) => e.stopPropagation()}>
         <ReactQuill
-          value={inputValue}
-          onChange={(e) => setInputValue(e)}
+          value={editTaskText}
+          onChange={(e) => setEditTaskText(e)}
           ref={editorRef}
           modules={modules}
           placeholder="Введите текст"
@@ -154,7 +143,11 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
           <button onClick={() => setActive(false)} className="closeBtn">
             Отменить
           </button>
-          <button disabled={isLoading} onClick={addTask} className="saveBtn">
+          <button
+            disabled={isLoading}
+            onClick={editComplete}
+            className="saveBtn"
+          >
             {isLoading ? "Сохранение..." : "Сохранить"}
           </button>
         </div>

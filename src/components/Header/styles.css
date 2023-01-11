@@ -121,7 +121,7 @@
 }
 .section_left {
   background: #ffffff;
-  height: 810px;
+  height: 85vh;
   width: 50%;
   border-radius: 33px;
   position: relative;
@@ -130,13 +130,11 @@
 .section_lection {
   width: 100%;
   border-radius: 33px;
-  margin-right: 10px;
-  margin-left: 10px;
   margin-bottom: 10px;
 }
 .section_right {
   background: #ffffff;
-  height: 810px;
+  height: 85vh;
   width: 50%;
   border-radius: 33px;
   margin-bottom: 10px;

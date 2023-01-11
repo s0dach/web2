@@ -66,6 +66,29 @@ export const Lists = () => {
       });
   };
 
+  const onEditTask = (listId, taskText, id) => {
+    const newList = lists.map((list) => {
+      if (list.id === listId) {
+        list.tasks = list.tasks.map((task) => {
+          if (task.id === id) {
+            task.text = taskText;
+          }
+          return task;
+        });
+      }
+      return list;
+    });
+    setLists(newList);
+    axios
+      .patch("http://95.163.234.208:3500/tasks/" + id, {
+        text: taskText,
+      })
+      .catch((e) => {
+        alert("Не удалось обновить задачу");
+        console.log(e);
+      });
+  };
+
   const onAddTask = (listId, taskObj) => {
     const newList = lists.map((item) => {
       if (item.id === listId) {
@@ -95,7 +118,6 @@ export const Lists = () => {
       setTimeout(() => {
         window.location.reload();
       }, "100");
-      console.log(task);
     });
 
     setLists(lists);
@@ -191,6 +213,7 @@ export const Lists = () => {
           lists={lists}
           setLists={setLists}
           onAddTask={onAddTask}
+          onEditTask={onEditTask}
         />
       </div>
     </>

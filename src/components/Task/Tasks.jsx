@@ -7,6 +7,7 @@ import { Task } from "./Task";
 
 export const Tasks = ({
   onAddTask,
+  onEditTask,
   lists,
   setLists,
   editable,
@@ -15,6 +16,7 @@ export const Tasks = ({
   setComplete,
 }) => {
   const [addTaskActive, setAddTaskActive] = React.useState(false);
+  const [editTask, setEditTask] = React.useState(false);
   const [activeItem, setActiveItem] = React.useState(null);
   const location = useLocation();
   const params = useParams();
@@ -45,6 +47,9 @@ export const Tasks = ({
           activeItem.tasks ? (
             activeItem.tasks.map((c) => (
               <Task
+                onEditTask={onEditTask}
+                active={editTask}
+                setActive={setEditTask}
                 complete={complete}
                 setComplete={setComplete}
                 documentId={c.documentId}
