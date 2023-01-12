@@ -314,13 +314,17 @@ span {
   height: 50px;
   margin: 10px 13px 10px 0;
 }
+.addListBlock {
+  display: flex;
+}
 .lection_input {
-  width: 80%;
-  height: 30px;
-  font-size: 1rem;
   border: 1px solid grey;
-  border-radius: 0.25rem;
+  font-size: 1rem;
+  height: 30px;
   margin-left: 10px;
+  width: 70%;
+  border-radius: 19px;
+  background: none;
 }
 .buttonDiv {
   display: flex;
@@ -345,4 +349,14 @@ span {
 .dp {
   text-align: center;
   font-size: 2rem;
+}
+
+.buttonOK {
+  background: #68bfd6;
+  border-radius: 19px;
+  border: none;
+  height: 30px;
+  width: 20%;
+  margin-left: 3px;
+  color: white;
 }

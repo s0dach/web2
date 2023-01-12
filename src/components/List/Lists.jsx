@@ -184,15 +184,17 @@ export const Lists = () => {
             : "Загрузка."}
           <div className="border"></div>
           {visiblePopup ? (
-            <div>
+            <div className="addListBlock">
               <input
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 className="lection_input"
                 type="text"
-                placeholder="Введите название лекции"
+                placeholder="Название лекции"
               />
-              <button onClick={addList}>OK</button>
+              <button className="buttonOK" onClick={addList}>
+                OK
+              </button>
             </div>
           ) : (
             <div
