@@ -120,24 +120,25 @@
   margin: 80px 20px 0 20px;
 }
 .section_left {
-  background: #ffffff;
+  width: 24%;
+  position: fixed;
+  background: #fff;
   height: 85vh;
-  width: 50%;
   border-radius: 33px;
-  position: relative;
   margin-bottom: 10px;
 }
 .section_lection {
-  width: 100%;
-  border-radius: 33px;
-  margin-bottom: 10px;
+  margin-left: 24.75%;
+  width: 50.5%;
 }
 .section_right {
-  background: #ffffff;
-  height: 85vh;
-  width: 50%;
+  width: 24%;
+  position: fixed;
+  background: #fff;
   border-radius: 33px;
+  height: 85vh;
   margin-bottom: 10px;
+  right: 20px;
 }
 
 .section_text {
@@ -194,7 +195,7 @@
   height: 50px;
   position: absolute;
   bottom: 0;
-  margin: 10px;
+  margin: 10px 10px 10px 12px;
   border: 1px solid #707070;
   border-radius: 25px;
   display: flex;
@@ -217,6 +218,30 @@
   height: 30px;
   background: rgba(112, 112, 112, 0.5);
 }
+
+.section_helpbtnSend {
+  display: flex;
+  cursor: pointer;
+  justify-content: space-around;
+  position: absolute;
+  bottom: 0;
+  margin-left: 12px;
+}
+.section_helpbtn1Send {
+  cursor: pointer;
+  width: 280px;
+  border: none;
+  display: inline-block;
+  text-align: center;
+  background: #68bfd6;
+  border-radius: 33px;
+  margin: 10px 0 10px 0;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 20px;
+  height: 50px;
+}
+
 .section_list {
   background: #ffffff;
   margin: 0 10px 10px 10px;

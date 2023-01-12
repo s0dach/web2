@@ -92,6 +92,11 @@ export const Tasks = ({
         <div className="section_number">
           {complete}/{activeItem ? activeItem.tasks.length : 0}
         </div>
+        <div className="section_helpbtnSend">
+          <button className="section_helpbtn1Send">
+            Опубликовать следующий
+          </button>
+        </div>
       </div>
     </>
   );
