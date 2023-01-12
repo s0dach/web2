@@ -110,6 +110,7 @@ export const Lists = () => {
     await axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
       active: false,
       complete: 0,
+      usersId: [],
     });
     await lists[params.id - 1].tasks.forEach((task) => {
       axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
