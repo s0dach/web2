@@ -151,6 +151,22 @@ export const Lists = () => {
         setActive={setActive}
         lectionName={lectionName}
       />
+      <div className="bottomButton">
+        <svg
+          width="50"
+          height="50"
+          viewBox="0 0 50 50"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="25" cy="25" r="25" fill="#095164" />
+          <path
+            d="M25.5 29L19.8708 19.25L31.1292 19.25L25.5 29Z"
+            fill="white"
+          />
+          <rect x="19" y="31" width="13" height="2" fill="white" />
+        </svg>
+      </div>
       <div className="section">
         <div className="section_left">
           <div className="section_text">Активные</div>
