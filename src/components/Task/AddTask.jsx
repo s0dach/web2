@@ -16,15 +16,17 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
 
   const editorRef = React.useRef();
 
-  const insertStar = (e) => {
+  function insertStar() {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.click();
     input.onchange = () => {
       const file = input.files[0];
       setFile(file);
+      const cursorPosition = this.quill.getSelection().index;
+      this.quill.insertText(cursorPosition, `[Вложения: ${file.name}]`);
     };
-  };
+  }
 
   // кастомные значки в тулбар
   let icons = Quill.import("ui/icons");
@@ -107,10 +109,7 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
     const obj = {
       listId: activeItem.id,
       active: "section_rigthbtn",
-      text:
-        file === "Вложений нет"
-          ? lastFinishedText
-          : lastFinishedText + `\`[Вложения:${file.name}]\``,
+      text: lastFinishedText,
       documentId: 0,
       completed: false,
     };

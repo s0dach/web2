@@ -172,7 +172,7 @@ export const Lists = () => {
           <div className="section_text">Активные</div>
           {lists
             ? lists.map((list) =>
-                list.active || list.editable ? (
+                list.active ? (
                   <div
                     onClick={() => navigate(`/posts/${list.id}`)}
                     className="section_activelectname"
@@ -187,7 +187,7 @@ export const Lists = () => {
           <div className="section_text">Доступные</div>
           {lists
             ? lists.map((list) =>
-                !list.active && !list.editable ? (
+                !list.active ? (
                   <div
                     onClick={() => navigate(`/posts/${list.id}`)}
                     className="section_dislectname"
