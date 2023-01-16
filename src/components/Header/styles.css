@@ -178,6 +178,19 @@
   cursor: pointer;
 }
 
+.flexTable {
+  opacity: 0;
+  display: flex;
+}
+.listsTable {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.flexTable:hover {
+  opacity: 1;
+}
 .border {
   margin: 20px 12px 20px 12px;
   border: 1px solid #dddddd;
