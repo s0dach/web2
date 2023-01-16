@@ -129,7 +129,9 @@ export const Lists = () => {
       active: true,
     });
     setActive(true);
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, "1000");
   };
 
   const stopLection = async () => {
@@ -144,7 +146,7 @@ export const Lists = () => {
       });
       setTimeout(() => {
         window.location.reload();
-      }, "100");
+      }, "1000");
     });
 
     setLists(lists);
