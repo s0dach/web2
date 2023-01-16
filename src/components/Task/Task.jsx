@@ -18,6 +18,8 @@ export const Task = ({
   active,
   setActive,
   setNextTaskSend,
+  setTaskIdAdd,
+  taskIdAdd,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -142,6 +144,7 @@ export const Task = ({
           <button
             onClick={() => {
               setAddTaskActive(true);
+              setTaskIdAdd(taskId);
             }}
             className="addButton"
           >

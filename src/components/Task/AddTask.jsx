@@ -9,13 +9,18 @@ import { htmlToMarkdown } from "../Parser/Parser";
 
 Quill.register("modules/imageUpload", ImageUpload);
 
-export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
+export const AddTask = ({
+  active,
+  setActive,
+  onAddTask,
+  activeItem,
+  taskIdAdd,
+}) => {
   const [inputValue, setInputValue] = React.useState("");
   const [file, setFile] = React.useState("Вложений нет");
   const [isLoading, setIsLoading] = React.useState(false);
 
   const editorRef = React.useRef();
-
   function insertStar() {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -93,7 +98,9 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
     }),
     []
   );
+
   const addTask = async (e) => {
+    console.log(taskIdAdd);
     setIsLoading(true);
     const htmlTooMarkdown = htmlToMarkdown(inputValue);
     const firstFinishedTextTest = htmlTooMarkdown
@@ -107,6 +114,7 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
       .join("<img src=");
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
     const obj = {
+      // id: taskIdAdd,
       listId: activeItem.id,
       active: "section_rigthbtn",
       text: lastFinishedText,
@@ -114,16 +122,36 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
       completed: false,
     };
     let id = 0;
-    await axios
-      .post("http://95.163.234.208:3500/tasks", obj)
-      .then(({ data }) => {
-        id = data.id;
-        onAddTask(Number(activeItem.id), data);
-      })
-      .catch((e) => {
-        console.log(e);
-        alert("Ошибка при добавлении задачи!");
-      });
+    await activeItem?.tasks.forEach((c) => {
+      if (c.id > taskIdAdd) {
+        axios.patch("http://95.163.234.208:3500/tasks/" + c.id, {
+          id: c.id + 1,
+        });
+      }
+    });
+    if (taskIdAdd === null) {
+      await axios
+        .post("http://95.163.234.208:3500/tasks", obj)
+        .then(({ data }) => {
+          id = data.id;
+          onAddTask(Number(activeItem.id), data);
+        })
+        .catch((e) => {
+          console.log(e);
+          alert("Ошибка при добавлении задачи!");
+        });
+    } else {
+      await axios
+        .patch("http://95.163.234.208:3500/tasks/" + taskIdAdd, obj)
+        .then(({ data }) => {
+          id = data.id;
+          onAddTask(Number(activeItem.id), data);
+        })
+        .catch((e) => {
+          console.log(e);
+          alert("Ошибка при добавлении задачи!");
+        });
+    }
     setTimeout(() => {
       const date = new FormData();
       date.append("file", file);
@@ -136,7 +164,10 @@ export const AddTask = ({ active, setActive, onAddTask, activeItem }) => {
       setIsLoading(false);
       setActive(false);
       setInputValue("");
-    }, "2000");
+    }, "1000");
+    setTimeout(() => {
+      window.location.reload();
+    }, "1500");
   };
 
   return (

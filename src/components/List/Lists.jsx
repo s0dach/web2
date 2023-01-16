@@ -96,6 +96,12 @@ export const Lists = () => {
       if (item.id === listId) {
         item.tasks = [...item.tasks, taskObj];
       }
+      // item.tasks.forEach((task) => {
+      //   axios.patch("http://95.163.234.208:3500/tasks/" + task.id, {
+      //     order: task.id,
+      //   });
+      // });
+
       return item;
     });
     setLists(newList);
@@ -122,18 +128,8 @@ export const Lists = () => {
         await axios
           .get("http://95.163.234.208:3500/lists?_expand=color&_embed=tasks")
           .then(({ data }) => {
-            // data[data.length - 1].tasks = data[params.id - 1].tasks;
-            // data[data.length - 1].tasks.forEach((e) => {
-            // axios.post("http://95.163.234.208:3500/tasks", {
-            //   listId: data.length - 1 + 1,
-            //   active: e.active,
-            //   text: e.text,
-            //   documentId: e.documentId,
-            //   completed: false,
-            // });
             data.forEach((list) => {
               if (list.id === Number(params.id)) {
-                console.log(list.tasks);
                 list.tasks.forEach((task) => {
                   axios.post("http://95.163.234.208:3500/tasks", {
                     listId: data[data.length - 1].id,
@@ -167,22 +163,8 @@ export const Lists = () => {
       complete: 0,
       usersId: [],
     });
-    // await lists?.[params.id - 1].tasks.forEach((task) => {
-    //   axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
-    //     active: "section_rigthbtn",
-    //   });
-    //   // setTimeout(() => {
-    //   //   window.location.reload();
-    //   // }, "1000");
-    // });
     await lists.forEach((list) => {
       if (list.id === Number(params.id)) {
-        // axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
-        //   active: "section_rigthbtn",
-        // });
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, "1000");
         list.tasks.forEach(
           (task) =>
             axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
@@ -197,6 +179,7 @@ export const Lists = () => {
     setLists(lists);
     setActive(false);
   };
+
   const onRemoveTask = (listId, taskId) => {
     if (window.confirm("Подтвердить удаление?")) {
       const newList = lists.map((item) => {
@@ -250,7 +233,7 @@ export const Lists = () => {
         setActive={setActive}
         lectionName={lectionName}
       />
-      <div className="bottomButton">
+      {/* <div className="bottomButton">
         <svg
           width="50"
           height="50"
@@ -265,7 +248,7 @@ export const Lists = () => {
           />
           <rect x="19" y="31" width="13" height="2" fill="white" />
         </svg>
-      </div>
+      </div> */}
       <div className="section">
         <div className="section_left">
           <div className="section_text">Активные</div>
@@ -297,7 +280,7 @@ export const Lists = () => {
                     </div>
                     <div
                       className="flexTable"
-                      onClick={() => console.log(list.name)}
+                      // onClick={() => console.log(list.name)}
                     >
                       <div onClick={() => editTitle(list.id, list.name)}>
                         <svg

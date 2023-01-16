@@ -19,6 +19,7 @@ export const Tasks = ({
   const [addTaskActive, setAddTaskActive] = React.useState(false);
   const [editTask, setEditTask] = React.useState(false);
   const [activeItem, setActiveItem] = React.useState(null);
+  const [activeList, setActiveList] = React.useState(null);
   const location = useLocation();
   const params = useParams();
   React.useEffect(() => {
@@ -29,13 +30,6 @@ export const Tasks = ({
       });
   }, [setLists]);
 
-  React.useEffect(() => {
-    if (lists) {
-      const list = lists.find((list) => list.id === Number(params.id));
-      setActiveItem(list);
-    }
-  }, [lists, location, params.id, setActiveItem]);
-
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
   const uriDoc = `https://api.telegram.org/bot${token}/sendDocument`;
@@ -43,6 +37,9 @@ export const Tasks = ({
   const [edit1, setEdit1] = React.useState(0);
   const [docId, setDocId] = React.useState(null);
   const [taskText, setTaskText] = React.useState(null);
+  const [currentTask, setCurrentTask] = React.useState(null);
+
+  const [taskIdAdd, setTaskIdAdd] = React.useState(null);
 
   React.useEffect(() => {
     if (nextTaskSend !== null) {
@@ -52,10 +49,17 @@ export const Tasks = ({
           setEdit1(data.active);
           setDocId(data.documentId);
           setTaskText(data.text);
-          console.log(data);
         });
     }
   }, [edit1, nextTaskSend, setNextTaskSend]);
+
+  React.useEffect(() => {
+    if (lists) {
+      const list = lists.find((list) => list.id === Number(params.id));
+      setActiveItem(list);
+      setActiveList(list.tasks);
+    }
+  }, [lists, location, params.id, setActiveItem, setActiveList]);
 
   const sendLection = async (e) => {
     if (params.id !== undefined) {
@@ -146,6 +150,45 @@ export const Tasks = ({
     }
   };
 
+  function dragStartHandler(e, card) {
+    setCurrentTask(card);
+  }
+  function dragEndHandler(e) {}
+  function dragOverHandler(e) {
+    e.preventDefault();
+  }
+  function dropHandler(e, card) {
+    e.preventDefault();
+    setActiveList(
+      activeList.forEach((c) => {
+        if (c.id === card.id) {
+          axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
+            ...c,
+            id: Number(currentTask.id),
+          });
+          console.log("cur", currentTask.id);
+          console.log(c.id);
+          // return { ...c, id: currentTask.id };
+        }
+        if (c.id === currentTask.id) {
+          axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
+            ...c,
+            id: Number(card.id),
+          });
+          // return { ...c, id: card.id };
+        }
+        // return c;
+      })
+    );
+  }
+
+  const sortTasks = (a, b) => {
+    if (a.id > b.id) {
+      return 1;
+    } else {
+      return -1;
+    }
+  };
   return (
     <>
       <div className="section_lection">
@@ -154,29 +197,40 @@ export const Tasks = ({
           onAddTask={onAddTask}
           active={addTaskActive}
           setActive={setAddTaskActive}
+          taskIdAdd={taskIdAdd}
         />
         {activeItem ? (
           activeItem.tasks ? (
-            activeItem.tasks.map((c) => (
-              <Task
-                edit1={edit1}
-                setEdit1={setEdit1}
-                nextTaskSend={nextTaskSend}
-                setNextTaskSend={setNextTaskSend}
-                onEditTask={onEditTask}
-                active={editTask}
-                setActive={setEditTask}
-                complete={complete}
-                setComplete={setComplete}
-                documentId={c.documentId}
-                onRemoveTask={onRemoveTask}
-                listId={c.listId}
-                taskId={c.id}
-                editable={editable}
-                taskText={c.text}
-                setAddTaskActive={setAddTaskActive}
-                key={c.id}
-              />
+            activeItem.tasks.sort(sortTasks).map((c) => (
+              <div
+                draggable={true}
+                onDragStart={(e) => dragStartHandler(e, c)}
+                onDragLeave={(e) => dragEndHandler(e)}
+                onDragEnd={(e) => dragEndHandler(e)}
+                onDragOver={(e) => dragOverHandler(e)}
+                onDrop={(e) => dropHandler(e, c)}
+              >
+                <Task
+                  setTaskIdAdd={setTaskIdAdd}
+                  edit1={edit1}
+                  setEdit1={setEdit1}
+                  nextTaskSend={nextTaskSend}
+                  setNextTaskSend={setNextTaskSend}
+                  onEditTask={onEditTask}
+                  active={editTask}
+                  setActive={setEditTask}
+                  complete={complete}
+                  setComplete={setComplete}
+                  documentId={c.documentId}
+                  onRemoveTask={onRemoveTask}
+                  listId={c.listId}
+                  taskId={c.id}
+                  editable={editable}
+                  taskText={c.text}
+                  setAddTaskActive={setAddTaskActive}
+                  key={c.id}
+                />
+              </div>
             ))
           ) : (
             <>
