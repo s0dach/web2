@@ -4,6 +4,7 @@ import { Header } from "../Header/Header";
 import "../Header/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { Tasks } from "../Task/Tasks";
+import { Instruction } from "../Task/Instruction";
 
 export const Lists = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export const Lists = () => {
   const [lectionName, setLectionName] = React.useState("");
   const [complete, setComplete] = React.useState(0);
   const [active, setActive] = React.useState(null);
+  const [instrActive, setInstrActive] = React.useState(false);
   // Костыль для отображения лекции
   React.useEffect(() => {
     if (params.id !== undefined) {
@@ -99,11 +101,35 @@ export const Lists = () => {
     setLists(newList);
   };
 
+  const onDublicateList = async () => {
+    await axios.post("http://95.163.234.208:3500/lists", {
+      name: lists?.[params.id - 1].name,
+      colorId: 1,
+      usersId: [],
+    });
+    await axios
+      .get("http://95.163.234.208:3500/lists?_expand=color&_embed=tasks")
+      .then(({ data }) => {
+        data[data.length - 1].tasks = data[params.id - 1].tasks;
+        data[data.length - 1].tasks.forEach((e) => {
+          axios.post("http://95.163.234.208:3500/tasks", {
+            listId: data.length - 1 + 1,
+            active: e.active,
+            text: e.text,
+            documentId: e.documentId,
+            completed: false,
+          });
+          console.log(e);
+        });
+        setLists(data);
+      });
+  };
   const startLection = () => {
     axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
       active: true,
     });
     setActive(true);
+    window.location.reload();
   };
 
   const stopLection = async () => {
@@ -142,7 +168,9 @@ export const Lists = () => {
 
   return (
     <>
+      <Instruction instrActive={instrActive} setInstrActive={setInstrActive} />
       <Header
+        onDublicateList={onDublicateList}
         startLection={startLection}
         stopLection={stopLection}
         edit={edit}
@@ -220,7 +248,10 @@ export const Lists = () => {
               + добавить лекцию
             </div>
           )}
-          <button className="section_helpbtn">
+          <button
+            className="section_helpbtn"
+            onClick={() => setInstrActive(true)}
+          >
             <div className="section_helpbtn1">?</div>Инструкция сервиса
           </button>
         </div>

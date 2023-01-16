@@ -16,7 +16,7 @@ export const AppRouter = () => {
         <Route key={route.path} element={route.element} path={route.path} />
       ))}
       {/* <Navigate to="/" replace /> */}
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/posts/1" />} />
     </Routes>
   ) : (
     <Routes>

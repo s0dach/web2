@@ -11,6 +11,7 @@ export const Header = ({
   setEdit,
   stopLection,
   startLection,
+  onDublicateList,
 }) => {
   const params = useParams();
 
@@ -119,7 +120,7 @@ export const Header = ({
               </svg>
             </div>
           )}
-          <div className="header_icon1">
+          <div className="header_icon1" onClick={onDublicateList}>
             <svg
               width="47"
               height="47"

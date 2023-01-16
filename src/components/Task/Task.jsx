@@ -17,6 +17,7 @@ export const Task = ({
   onEditTask,
   active,
   setActive,
+  setNextTaskSend,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -27,6 +28,7 @@ export const Task = ({
   const [edit1, setEdit1] = React.useState(0);
   const [editTaskId, setEditTaskId] = React.useState(null);
   const [editTaskText, setEditTaskText] = React.useState(null);
+  const [activeList, setActiveList] = React.useState(null);
 
   React.useEffect(() => {
     if (params.id !== undefined) {
@@ -34,6 +36,7 @@ export const Task = ({
         .get(`http://95.163.234.208:3500/lists/${params.id}`)
         .then(({ data }) => {
           setEdit(data.editable);
+          setActiveList(data.active);
         });
     }
   }, [params.id, editable]);
@@ -42,7 +45,7 @@ export const Task = ({
     axios.get(`http://95.163.234.208:3500/tasks/${taskId}`).then(({ data }) => {
       setEdit1(data.active);
     });
-  }, [taskId, edit1]);
+  }, [taskId, edit1, setEdit1]);
 
   const sendLection = async (e) => {
     if (params.id !== undefined) {
@@ -55,7 +58,7 @@ export const Task = ({
           setComplete(data.complete + 1);
         });
     }
-
+    setNextTaskSend(taskId + 1);
     try {
       let data = [];
       if (params.id !== undefined) {
@@ -191,7 +194,10 @@ export const Task = ({
             />
           ) : undefined}
           {!edit ? (
-            <button className={edit1} onClick={sendLection}>
+            <button
+              className={activeList ? edit1 : "section_rigthbtnNone"}
+              onClick={sendLection}
+            >
               Публиковать
             </button>
           ) : (
