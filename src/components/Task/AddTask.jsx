@@ -123,7 +123,7 @@ export const AddTask = ({
     };
     let id = 0;
     await activeItem?.tasks.forEach((c) => {
-      if (c.id > taskIdAdd) {
+      if (c.id >= taskIdAdd) {
         axios.patch("http://95.163.234.208:3500/tasks/" + c.id, {
           id: c.id + 1,
         });
