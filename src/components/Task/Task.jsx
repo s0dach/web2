@@ -11,6 +11,7 @@ export const Task = ({
   editable,
   listId,
   taskId,
+  taskOrderId,
   onRemoveTask,
   documentId,
   setComplete,
@@ -144,7 +145,7 @@ export const Task = ({
           <button
             onClick={() => {
               setAddTaskActive(true);
-              setTaskIdAdd(taskId);
+              setTaskIdAdd(taskOrderId);
             }}
             className="addButton"
           >

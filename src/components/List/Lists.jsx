@@ -91,16 +91,36 @@ export const Lists = () => {
       });
   };
 
-  const onAddTask = (listId, taskObj) => {
+  const onAddTask = (listId, taskObj, taskIdAdd) => {
     const newList = lists.map((item) => {
       if (item.id === listId) {
         item.tasks = [...item.tasks, taskObj];
       }
-      // item.tasks.forEach((task) => {
-      //   axios.patch("http://95.163.234.208:3500/tasks/" + task.id, {
-      //     order: task.id,
-      //   });
-      // });
+      item.tasks.forEach((task) => {
+        if (task.order === null) {
+          axios
+            .patch("http://95.163.234.208:3500/tasks/" + task.id, {
+              order: task.id,
+            })
+            .then(({ data }) => {
+              if (taskIdAdd) {
+                axios.patch(`http://95.163.234.208:3500/tasks/${data.id}`, {
+                  order: taskIdAdd,
+                });
+                item.tasks.forEach((task) => {
+                  if (task.order >= taskIdAdd) {
+                    axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
+                      order: task.order + 1,
+                    });
+                  }
+                });
+              }
+              setTimeout(() => {
+                window.location.reload();
+              }, "100");
+            });
+        }
+      });
 
       return item;
     });

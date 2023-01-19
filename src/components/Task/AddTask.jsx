@@ -100,7 +100,6 @@ export const AddTask = ({
   );
 
   const addTask = async (e) => {
-    console.log(taskIdAdd);
     setIsLoading(true);
     const htmlTooMarkdown = htmlToMarkdown(inputValue);
     const firstFinishedTextTest = htmlTooMarkdown
@@ -114,7 +113,7 @@ export const AddTask = ({
       .join("<img src=");
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
     const obj = {
-      // id: taskIdAdd,
+      order: null,
       listId: activeItem.id,
       active: "section_rigthbtn",
       text: lastFinishedText,
@@ -122,36 +121,40 @@ export const AddTask = ({
       completed: false,
     };
     let id = 0;
-    await activeItem?.tasks.forEach((c) => {
-      if (c.id >= taskIdAdd) {
-        axios.patch("http://95.163.234.208:3500/tasks/" + c.id, {
-          id: c.id + 1,
-        });
-      }
-    });
-    if (taskIdAdd === null) {
-      await axios
-        .post("http://95.163.234.208:3500/tasks", obj)
-        .then(({ data }) => {
-          id = data.id;
-          onAddTask(Number(activeItem.id), data);
-        })
-        .catch((e) => {
-          console.log(e);
-          alert("Ошибка при добавлении задачи!");
-        });
-    } else {
-      await axios
-        .patch("http://95.163.234.208:3500/tasks/" + taskIdAdd, obj)
-        .then(({ data }) => {
-          id = data.id;
-          onAddTask(Number(activeItem.id), data);
-        })
-        .catch((e) => {
-          console.log(e);
-          alert("Ошибка при добавлении задачи!");
-        });
-    }
+    // if (taskIdAdd === null) {
+    await axios
+      .post("http://95.163.234.208:3500/tasks", obj)
+      .then(({ data }) => {
+        id = data.id;
+        onAddTask(Number(activeItem.id), data, taskIdAdd);
+      })
+      .catch((e) => {
+        console.log(e);
+        alert("Ошибка при добавлении задачи!");
+      });
+    // } else {
+    //   await activeItem?.tasks.forEach((c) => {
+    //     if (c.id >= taskIdAdd) {
+    //       console.log(c);
+    //       axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
+    //         ...c,
+    //         order: c.id + 1,
+    //       });
+    //       // .then(({ data }) => console.log(data));
+    //     }
+    //   });
+    //   await axios
+    //     .post("http://95.163.234.208:3500/tasks", obj)
+    //     .then(({ data }) => {
+    //       id = data.id;
+    //       onAddTask(Number(activeItem.id), data);
+    //       // console.log(data);
+    //     })
+    //     .catch((e) => {
+    //       console.log(e);
+    //       alert("Ошибка при добавлении задачи!");
+    //     });
+    // }
     setTimeout(() => {
       const date = new FormData();
       date.append("file", file);
@@ -165,9 +168,9 @@ export const AddTask = ({
       setActive(false);
       setInputValue("");
     }, "1000");
-    setTimeout(() => {
-      window.location.reload();
-    }, "1500");
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, "1500");
   };
 
   return (
