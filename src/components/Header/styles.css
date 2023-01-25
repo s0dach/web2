@@ -298,6 +298,16 @@ span {
   justify-content: space-between;
   border-radius: 35px;
 }
+.editDiv {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100px;
+  height: 47px;
+  border: 1.3px solid #68bfd6;
+  border-radius: 30px;
+  margin: 10px 0 10px 10px;
+}
 .section_rigthbtn {
   cursor: pointer;
   border: 1px solid #68bfd6;
@@ -349,7 +359,7 @@ span {
 }
 .buttonDiv {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
 .centerButtonbottom {
   display: flex;
@@ -361,9 +371,17 @@ span {
   width: 30px;
   height: 30px;
   background-color: #68bfd6;
-  margin: 0 0 10px 0;
+  margin: 0 5px 10px 0;
   border-radius: 50%;
   font-size: 1.5rem;
+  color: #ffffff;
+}
+.addQButton {
+  cursor: pointer;
+  border: #68bfd6;
+  background-color: #68bfd6;
+  margin: 0 0px 10px 0;
+  border-radius: 25px;
   color: #ffffff;
 }
 /* снести вот это */

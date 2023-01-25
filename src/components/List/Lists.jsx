@@ -37,7 +37,7 @@ export const Lists = () => {
       .then(({ data }) => {
         setLists(data);
       });
-  }, [active, edit]);
+  }, [active, edit, params.id]);
 
   const onAdd = (obj) => {
     const newList = [...lists, obj];
@@ -95,33 +95,24 @@ export const Lists = () => {
     const newList = lists.map((item) => {
       if (item.id === listId) {
         item.tasks = [...item.tasks, taskObj];
-      }
-      item.tasks.forEach((task) => {
-        if (task.order === null) {
-          axios
-            .patch("http://95.163.234.208:3500/tasks/" + task.id, {
-              order: task.id,
-            })
-            .then(({ data }) => {
-              if (taskIdAdd) {
-                axios.patch(`http://95.163.234.208:3500/tasks/${data.id}`, {
-                  order: taskIdAdd,
-                });
-                item.tasks.forEach((task) => {
-                  if (task.order >= taskIdAdd) {
-                    axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
-                      order: task.order + 1,
-                    });
-                  }
-                });
-              }
-              setTimeout(() => {
-                window.location.reload();
-              }, "100");
-            });
-        }
-      });
 
+        item.tasks.map((task) => {
+          if (taskIdAdd) {
+            if (task.order === taskIdAdd) {
+              taskObj.order = taskIdAdd;
+            }
+            if (taskObj.id !== task.id) {
+              if (task.order >= taskIdAdd) {
+                task.order = task.order + 1;
+              }
+            }
+          }
+          axios.patch("http://95.163.234.208:3500/tasks/" + task.id, {
+            order: task.order,
+          });
+          return task;
+        });
+      }
       return item;
     });
     setLists(newList);
@@ -200,11 +191,20 @@ export const Lists = () => {
     setActive(false);
   };
 
-  const onRemoveTask = (listId, taskId) => {
+  const onRemoveTask = (listId, taskId, taskOrderId) => {
     if (window.confirm("Подтвердить удаление?")) {
       const newList = lists.map((item) => {
         if (item.id === listId) {
           item.tasks = item.tasks.filter((task) => task.id !== taskId);
+        }
+        if (item.id === listId) {
+          item.tasks.forEach((task) => {
+            if (task.order > taskOrderId) {
+              axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
+                order: task.order - 1,
+              });
+            }
+          });
         }
         return item;
       });
@@ -298,10 +298,7 @@ export const Lists = () => {
                     >
                       {list.name}
                     </div>
-                    <div
-                      className="flexTable"
-                      // onClick={() => console.log(list.name)}
-                    >
+                    <div className="flexTable">
                       <div onClick={() => editTitle(list.id, list.name)}>
                         <svg
                           width="22"

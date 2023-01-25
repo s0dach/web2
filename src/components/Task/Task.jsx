@@ -21,6 +21,8 @@ export const Task = ({
   setNextTaskSend,
   setTaskIdAdd,
   taskIdAdd,
+  card,
+  activeItem,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -49,6 +51,44 @@ export const Task = ({
       setEdit1(data.active);
     });
   }, [taskId, edit1, setEdit1]);
+
+  const taskEditDown = () => {
+    activeItem.forEach(async (item, index) => {
+      if (item.order === taskOrderId) {
+        await axios.patch(`http://95.163.234.208:3500/tasks/${item.id}`, {
+          order: activeItem[index + 1].order,
+        });
+        await axios.patch(
+          `http://95.163.234.208:3500/tasks/${activeItem[index + 1].id}`,
+          {
+            order: item.order,
+          }
+        );
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, "500");
+    });
+  };
+
+  const taskEditUp = () => {
+    activeItem.forEach(async (item, index) => {
+      if (item.order === taskOrderId) {
+        await axios.patch(`http://95.163.234.208:3500/tasks/${item.id}`, {
+          order: activeItem[index - 1].order,
+        });
+        await axios.patch(
+          `http://95.163.234.208:3500/tasks/${activeItem[index - 1].id}`,
+          {
+            order: item.order,
+          }
+        );
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, "500");
+    });
+  };
 
   const sendLection = async (e) => {
     if (params.id !== undefined) {
@@ -142,15 +182,26 @@ export const Task = ({
     <>
       <div className="buttonDiv">
         {edit && (
-          <button
-            onClick={() => {
-              setAddTaskActive(true);
-              setTaskIdAdd(taskOrderId);
-            }}
-            className="addButton"
-          >
-            +
-          </button>
+          <>
+            <button
+              onClick={() => {
+                setAddTaskActive(true);
+                setTaskIdAdd(taskOrderId);
+              }}
+              className="addButton"
+            >
+              +
+            </button>
+            <button
+              onClick={() => {
+                setAddTaskActive(true);
+                setTaskIdAdd(taskOrderId);
+              }}
+              className="addQButton"
+            >
+              опрос
+            </button>
+          </>
         )}
       </div>
       <div
@@ -205,26 +256,70 @@ export const Task = ({
               Публиковать
             </button>
           ) : (
-            <div
-              className="header_iconTrash"
-              onClick={() => onRemoveTask(listId, taskId)}
-            >
-              <svg
-                width="47"
-                height="47"
-                viewBox="0 0 50 50"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <>
+              <div className="editDiv">
+                <svg
+                  onClick={taskEditUp}
+                  width="14"
+                  height="12"
+                  viewBox="0 0 14 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.00001 0L13.9282 12H0.0718079L7.00001 0Z"
+                    fill="#68BFD6"
+                  />
+                </svg>
+                <svg
+                  width="1"
+                  height="36"
+                  viewBox="0 0 1 36"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M-1.57361e-06 36L0 -4.37114e-08L1 0L0.999998 36L-1.57361e-06 36Z"
+                    fill="#68BFD6"
+                  />
+                </svg>
+                <svg
+                  onClick={taskEditDown}
+                  width="14"
+                  height="12"
+                  viewBox="0 0 14 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6.99999 12L0.071786 -1.21137e-06L13.9282 0L6.99999 12Z"
+                    fill="#68BFD6"
+                  />
+                </svg>
+              </div>
+              <div
+                className="header_iconTrash"
+                onClick={() => onRemoveTask(listId, taskId, taskOrderId)}
               >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M22.5092 15.7149C22.5728 15.8251 22.6423 15.9297 22.7172 16.0285C23.617 17.2175 25.2826 17.5778 26.6073 16.813L28.5813 15.6733L30.3133 14.6733L29.3133 12.9412L29.0011 12.4005L28.0011 10.6685L26.2691 11.6685L23.4291 13.3081L21.697 14.3081L22.5092 15.7149ZM27.2691 13.4005L27.5813 13.9412L25.6073 15.0809C25.244 15.2906 24.8039 15.2466 24.4922 15.0037L27.2691 13.4005ZM27.0082 20.3757H29.923C30.0716 20.3757 30.212 20.4079 30.3381 20.4655L28.7473 22.0851L27.0082 20.3757ZM30.1736 23.4871L30.7689 22.881L30.6545 23.9597L30.1736 23.4871ZM25.2167 21.4193L27.3458 23.5119L25.2493 25.6464L23.1383 23.5354L25.2167 21.4193ZM28.7722 24.9139L26.6636 27.0607L28.7746 29.1717L30.2624 27.657L30.3852 26.4993L28.7722 24.9139ZM21.7367 24.9623L23.8478 27.0733L21.6755 29.2849L20.0708 27.6802L19.9729 26.758L21.7367 24.9623ZM25.262 28.4876L23.0897 30.6992L25.2008 32.8102L27.3731 30.5986L25.262 28.4876ZM21.6882 32.1261L20.8277 33.0022C21.0115 33.2054 21.2771 33.3317 21.5697 33.3317H22.8938L21.6882 32.1261ZM28.761 33.3317H27.4919L28.7874 32.0129L29.6194 32.8449C29.4438 33.1383 29.123 33.3317 28.761 33.3317ZM31.7928 32.1899L32.1777 28.5612L32.293 28.4438L32.1999 28.3523L32.4531 25.9648L32.5717 25.8441L32.4759 25.7499L32.9062 21.6921C33.0942 19.92 31.705 18.3757 29.923 18.3757H20.4077C18.6257 18.3757 17.2365 19.92 17.4244 21.6921L18.5864 32.6481C18.7483 34.1739 20.0353 35.3317 21.5697 35.3317H28.761C30.2953 35.3317 31.5824 34.1739 31.7442 32.6481L31.7497 32.5967L31.9746 32.3717L31.7928 32.1899ZM20.3225 23.548L19.6997 24.182L19.5506 22.7762L20.3225 23.548ZM23.4383 20.3757L21.724 22.1211L20.0459 20.443C20.1578 20.3996 20.2797 20.3757 20.4077 20.3757H23.4383Z"
-                  fill="#68BFD6"
-                />
-                <circle cx="25" cy="25" r="24.5" stroke="#68BFD6" />
-              </svg>
-            </div>
+                <svg
+                  width="47"
+                  height="47"
+                  viewBox="0 0 50 50"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M22.5092 15.7149C22.5728 15.8251 22.6423 15.9297 22.7172 16.0285C23.617 17.2175 25.2826 17.5778 26.6073 16.813L28.5813 15.6733L30.3133 14.6733L29.3133 12.9412L29.0011 12.4005L28.0011 10.6685L26.2691 11.6685L23.4291 13.3081L21.697 14.3081L22.5092 15.7149ZM27.2691 13.4005L27.5813 13.9412L25.6073 15.0809C25.244 15.2906 24.8039 15.2466 24.4922 15.0037L27.2691 13.4005ZM27.0082 20.3757H29.923C30.0716 20.3757 30.212 20.4079 30.3381 20.4655L28.7473 22.0851L27.0082 20.3757ZM30.1736 23.4871L30.7689 22.881L30.6545 23.9597L30.1736 23.4871ZM25.2167 21.4193L27.3458 23.5119L25.2493 25.6464L23.1383 23.5354L25.2167 21.4193ZM28.7722 24.9139L26.6636 27.0607L28.7746 29.1717L30.2624 27.657L30.3852 26.4993L28.7722 24.9139ZM21.7367 24.9623L23.8478 27.0733L21.6755 29.2849L20.0708 27.6802L19.9729 26.758L21.7367 24.9623ZM25.262 28.4876L23.0897 30.6992L25.2008 32.8102L27.3731 30.5986L25.262 28.4876ZM21.6882 32.1261L20.8277 33.0022C21.0115 33.2054 21.2771 33.3317 21.5697 33.3317H22.8938L21.6882 32.1261ZM28.761 33.3317H27.4919L28.7874 32.0129L29.6194 32.8449C29.4438 33.1383 29.123 33.3317 28.761 33.3317ZM31.7928 32.1899L32.1777 28.5612L32.293 28.4438L32.1999 28.3523L32.4531 25.9648L32.5717 25.8441L32.4759 25.7499L32.9062 21.6921C33.0942 19.92 31.705 18.3757 29.923 18.3757H20.4077C18.6257 18.3757 17.2365 19.92 17.4244 21.6921L18.5864 32.6481C18.7483 34.1739 20.0353 35.3317 21.5697 35.3317H28.761C30.2953 35.3317 31.5824 34.1739 31.7442 32.6481L31.7497 32.5967L31.9746 32.3717L31.7928 32.1899ZM20.3225 23.548L19.6997 24.182L19.5506 22.7762L20.3225 23.548ZM23.4383 20.3757L21.724 22.1211L20.0459 20.443C20.1578 20.3996 20.2797 20.3757 20.4077 20.3757H23.4383Z"
+                    fill="#68BFD6"
+                  />
+                  <circle cx="25" cy="25" r="24.5" stroke="#68BFD6" />
+                </svg>
+              </div>
+            </>
           )}
         </div>
       </div>

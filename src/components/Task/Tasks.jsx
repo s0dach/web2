@@ -37,7 +37,7 @@ export const Tasks = ({
   const [edit1, setEdit1] = React.useState(0);
   const [docId, setDocId] = React.useState(null);
   const [taskText, setTaskText] = React.useState(null);
-  const [currentTask, setCurrentTask] = React.useState(null);
+  // const [currentTask, setCurrentTask] = React.useState(null);
 
   const [taskIdAdd, setTaskIdAdd] = React.useState(null);
 
@@ -51,7 +51,7 @@ export const Tasks = ({
           setTaskText(data.text);
         });
     }
-  }, [edit1, nextTaskSend, setNextTaskSend]);
+  }, [edit1, nextTaskSend, setNextTaskSend, setAddTaskActive]);
 
   React.useEffect(() => {
     if (lists) {
@@ -150,48 +150,48 @@ export const Tasks = ({
     }
   };
 
-  function dragStartHandler(e, card) {
-    setCurrentTask(card);
-    // console.log(card);
-  }
-  function dragEndHandler(e) {
-    e.target.style.border = "none";
-  }
-  function dragOverHandler(e) {
-    e.preventDefault();
-    e.target.style.border = "1px solid black";
-  }
-  function dropHandler(e, card) {
-    e.preventDefault();
-    e.target.style.border = "none";
-    if (currentTask !== null) {
-      axios.patch(`http://95.163.234.208:3500/tasks/${card.id}`, {
-        order: Number(currentTask.order),
-      });
-      axios.patch(`http://95.163.234.208:3500/tasks/${currentTask.id}`, {
-        order: Number(card.order),
-      });
-    }
-    setTimeout(() => {
-      window.location.reload();
-    }, "100");
-    // activeItem?.tasks.map((c) => {
-    //   if (c.id === card.id) {
-    //     axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
-    //       order: Number(currentTask.id),
-    //     });
-    //     return { ...c, id: currentTask.id };
-    //   }
-    //   if (c.id === currentTask.id) {
-    //     axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
-    //       ...c,
-    //       order: Number(card.id),
-    //     });
-    //     return { ...c, id: card.id };
-    //   }
-    //   return c;
-    // });
-  }
+  // function dragStartHandler(e, card) {
+  //   setCurrentTask(card);
+  //   // console.log(card);
+  // }
+  // function dragEndHandler(e) {
+  //   e.target.style.border = "none";
+  // }
+  // function dragOverHandler(e) {
+  //   e.preventDefault();
+  //   e.target.style.border = "1px solid black";
+  // }
+  // function dropHandler(e, card) {
+  //   e.preventDefault();
+  //   e.target.style.border = "none";
+  //   if (currentTask !== null) {
+  //     axios.patch(`http://95.163.234.208:3500/tasks/${card.id}`, {
+  //       order: Number(currentTask.order),
+  //     });
+  //     axios.patch(`http://95.163.234.208:3500/tasks/${currentTask.id}`, {
+  //       order: Number(card.order),
+  //     });
+  //   }
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, "100");
+  //   // activeItem?.tasks.map((c) => {
+  //   //   if (c.id === card.id) {
+  //   //     axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
+  //   //       order: Number(currentTask.id),
+  //   //     });
+  //   //     return { ...c, id: currentTask.id };
+  //   //   }
+  //   //   if (c.id === currentTask.id) {
+  //   //     axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
+  //   //       ...c,
+  //   //       order: Number(card.id),
+  //   //     });
+  //   //     return { ...c, id: card.id };
+  //   //   }
+  //   //   return c;
+  //   // });
+  // }
 
   const sortTasks = (a, b) => {
     if (a.order > b.order) {
@@ -212,20 +212,15 @@ export const Tasks = ({
         />
         {activeItem ? (
           activeItem.tasks ? (
-            activeItem.tasks.sort(sortTasks).map((c) => (
-              <div
-                draggable={true}
-                onDragStart={(e) => dragStartHandler(e, c)}
-                onDragLeave={(e) => dragEndHandler(e)}
-                onDragEnd={(e) => dragEndHandler(e)}
-                onDragOver={(e) => dragOverHandler(e)}
-                onDrop={(e) => dropHandler(e, c)}
-              >
+            activeItem.tasks
+              .sort(sortTasks)
+              .map((c) => (
                 <Task
+                  activeItem={activeItem.tasks}
+                  card={c}
                   setTaskIdAdd={setTaskIdAdd}
                   edit1={edit1}
                   setEdit1={setEdit1}
-                  nextTaskSend={nextTaskSend}
                   setNextTaskSend={setNextTaskSend}
                   onEditTask={onEditTask}
                   active={editTask}
@@ -242,8 +237,7 @@ export const Tasks = ({
                   setAddTaskActive={setAddTaskActive}
                   key={c.id}
                 />
-              </div>
-            ))
+              ))
           ) : (
             <>
               <div className="section_list">
@@ -262,6 +256,14 @@ export const Tasks = ({
             className="addButton"
           >
             +
+          </button>
+          <button
+            onClick={() => {
+              setAddTaskActive(true);
+            }}
+            className="addQButton"
+          >
+            опрос
           </button>
         </div>
       </div>
