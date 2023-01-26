@@ -4,6 +4,7 @@ import { AddTask } from "./AddTask";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { Task } from "./Task";
+import { PollAdd } from "./PollAdd";
 
 export const Tasks = ({
   onAddTask,
@@ -15,13 +16,15 @@ export const Tasks = ({
   complete,
   setComplete,
 }) => {
+  const location = useLocation();
+  const params = useParams();
+
   const [nextTaskSend, setNextTaskSend] = React.useState(null);
   const [addTaskActive, setAddTaskActive] = React.useState(false);
   const [editTask, setEditTask] = React.useState(false);
   const [activeItem, setActiveItem] = React.useState(null);
-  // const [activeList, setActiveList] = React.useState(null);
-  const location = useLocation();
-  const params = useParams();
+  const [pollActive, setPollActive] = React.useState(false);
+
   React.useEffect(() => {
     axios
       .get("http://95.163.234.208:3500/lists?_expand=color&_embed=tasks")
@@ -37,7 +40,6 @@ export const Tasks = ({
   const [edit1, setEdit1] = React.useState(0);
   const [docId, setDocId] = React.useState(null);
   const [taskText, setTaskText] = React.useState(null);
-  // const [currentTask, setCurrentTask] = React.useState(null);
 
   const [taskIdAdd, setTaskIdAdd] = React.useState(null);
 
@@ -150,49 +152,6 @@ export const Tasks = ({
     }
   };
 
-  // function dragStartHandler(e, card) {
-  //   setCurrentTask(card);
-  //   // console.log(card);
-  // }
-  // function dragEndHandler(e) {
-  //   e.target.style.border = "none";
-  // }
-  // function dragOverHandler(e) {
-  //   e.preventDefault();
-  //   e.target.style.border = "1px solid black";
-  // }
-  // function dropHandler(e, card) {
-  //   e.preventDefault();
-  //   e.target.style.border = "none";
-  //   if (currentTask !== null) {
-  //     axios.patch(`http://95.163.234.208:3500/tasks/${card.id}`, {
-  //       order: Number(currentTask.order),
-  //     });
-  //     axios.patch(`http://95.163.234.208:3500/tasks/${currentTask.id}`, {
-  //       order: Number(card.order),
-  //     });
-  //   }
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, "100");
-  //   // activeItem?.tasks.map((c) => {
-  //   //   if (c.id === card.id) {
-  //   //     axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
-  //   //       order: Number(currentTask.id),
-  //   //     });
-  //   //     return { ...c, id: currentTask.id };
-  //   //   }
-  //   //   if (c.id === currentTask.id) {
-  //   //     axios.patch(`http://95.163.234.208:3500/tasks/${c.id}`, {
-  //   //       ...c,
-  //   //       order: Number(card.id),
-  //   //     });
-  //   //     return { ...c, id: card.id };
-  //   //   }
-  //   //   return c;
-  //   // });
-  // }
-
   const sortTasks = (a, b) => {
     if (a.order > b.order) {
       return 1;
@@ -210,12 +169,22 @@ export const Tasks = ({
           setActive={setAddTaskActive}
           taskIdAdd={taskIdAdd}
         />
+        <PollAdd
+          onAddTask={onAddTask}
+          taskIdAdd={taskIdAdd}
+          activeItem={activeItem}
+          pollActive={pollActive}
+          setPollActive={setPollActive}
+        />
         {activeItem ? (
           activeItem.tasks ? (
             activeItem.tasks
               .sort(sortTasks)
               .map((c) => (
                 <Task
+                  pollQuestion={c.pollQuestion}
+                  pollOptions={c.pollOptions}
+                  setPollActive={setPollActive}
                   activeItem={activeItem.tasks}
                   card={c}
                   setTaskIdAdd={setTaskIdAdd}
@@ -259,6 +228,7 @@ export const Tasks = ({
           </button>
           <button
             onClick={() => {
+              setPollActive(true);
               setAddTaskActive(true);
             }}
             className="addQButton"

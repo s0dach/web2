@@ -6,7 +6,10 @@ import { useParams } from "react-router-dom";
 import { EditTask } from "./EditTask";
 
 export const Task = ({
+  setPollActive,
+  pollQuestion,
   taskText,
+  pollOptions,
   setAddTaskActive,
   editable,
   listId,
@@ -91,91 +94,131 @@ export const Task = ({
   };
 
   const sendLection = async (e) => {
-    if (params.id !== undefined) {
-      await axios
-        .get(`http://95.163.234.208:3500/lists/${params.id}`)
-        .then(({ data }) => {
-          axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
-            complete: data.complete + 1,
-          });
-          setComplete(data.complete + 1);
-        });
-    }
-    setNextTaskSend(taskId + 1);
-    try {
-      let data = [];
+    if (!pollOptions) {
       if (params.id !== undefined) {
         await axios
-          .get(`http://95.163.234.208:3500/lists/${listId}`)
-          .then((res) => {
-            data = res.data.usersId;
+          .get(`http://95.163.234.208:3500/lists/${params.id}`)
+          .then(({ data }) => {
+            axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
+              complete: data.complete + 1,
+            });
+            setComplete(data.complete + 1);
           });
       }
-      await axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
-        active: "section_rigthbtnNone",
-      });
-      await axios
-        .get(`http://95.163.234.208:3500/tasks/${taskId}`)
-        .then(({ data }) => {
-          setEdit1(data.active);
+      setNextTaskSend(taskId + 1);
+      try {
+        let data = [];
+        if (params.id !== undefined) {
+          await axios
+            .get(`http://95.163.234.208:3500/lists/${listId}`)
+            .then((res) => {
+              data = res.data.usersId;
+            });
+        }
+        await axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
+          active: "section_rigthbtnNone",
         });
-      const boldText = taskText.split("**").join("!!!");
-      const italicText = boldText.split("*").join("@@@");
-      const boldTextFinish = italicText.split("!!!").join("*");
-      const allBItext = boldTextFinish.split("@@@").join("_");
-      const allFixText = allBItext.replace(/\\/g, "");
-      const firstFinishedTextTest = allFixText.split("![](").join("<img src=");
-      const lastFinishedTextTest = firstFinishedTextTest
-        .split(".png)")
-        .join(".png>");
-      const firstFinishedText = lastFinishedTextTest
-        .split("![](")
-        .join("<img src=");
-      const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
-      const links = lastFinishedText.match(/https:\/\/[^\sZ]+/i);
-      const first_link = links?.[0];
-      const finishMyText = lastFinishedText.replace(
-        "*Вложения:**",
-        "Вложения: "
-      );
-      data.forEach((ids) => {
-        if (first_link !== undefined) {
-          // Обрезаем конечный текст с картинкой
-
-          const firstFinishText = lastFinishedText.replace(
-            "<img src=" + first_link,
-            ""
-          );
-
-          const lastFinishText = firstFinishText.replace(">" + first_link, "");
-          const finishedText = lastFinishText.replace("<span><span>", "");
-          axios.post(uriApiPhoto, {
-            chat_id: Number(ids),
-            photo: first_link,
-            caption: finishedText,
-            parse_mode: "Markdown",
+        await axios
+          .get(`http://95.163.234.208:3500/tasks/${taskId}`)
+          .then(({ data }) => {
+            setEdit1(data.active);
           });
-        }
-        if (first_link === undefined) {
-          if (documentId !== 0) {
-            axios.post(uriDoc, {
+        const boldText = taskText.split("**").join("!!!");
+        const italicText = boldText.split("*").join("@@@");
+        const boldTextFinish = italicText.split("!!!").join("*");
+        const allBItext = boldTextFinish.split("@@@").join("_");
+        const allFixText = allBItext.replace(/\\/g, "");
+        const firstFinishedTextTest = allFixText
+          .split("![](")
+          .join("<img src=");
+        const lastFinishedTextTest = firstFinishedTextTest
+          .split(".png)")
+          .join(".png>");
+        const firstFinishedText = lastFinishedTextTest
+          .split("![](")
+          .join("<img src=");
+        const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
+        const links = lastFinishedText.match(/https:\/\/[^\sZ]+/i);
+        const first_link = links?.[0];
+        const finishMyText = lastFinishedText.replace(
+          "*Вложения:**",
+          "Вложения: "
+        );
+        data.forEach((ids) => {
+          if (first_link !== undefined) {
+            // Обрезаем конечный текст с картинкой
+
+            const firstFinishText = lastFinishedText.replace(
+              "<img src=" + first_link,
+              ""
+            );
+
+            const lastFinishText = firstFinishText.replace(
+              ">" + first_link,
+              ""
+            );
+            const finishedText = lastFinishText.replace("<span><span>", "");
+            axios.post(uriApiPhoto, {
               chat_id: Number(ids),
+              photo: first_link,
+              caption: finishedText,
               parse_mode: "Markdown",
-              caption: finishMyText,
-              document: `https://drive.google.com/u/0/uc?id=${documentId}&export=download`,
             });
           }
-          if (documentId === 0) {
-            axios.post(uriApiMessage, {
-              chat_id: Number(ids),
-              parse_mode: "Markdown",
-              text: lastFinishedText,
-            });
+          if (first_link === undefined) {
+            if (documentId !== 0) {
+              axios.post(uriDoc, {
+                chat_id: Number(ids),
+                parse_mode: "Markdown",
+                caption: finishMyText,
+                document: `https://drive.google.com/u/0/uc?id=${documentId}&export=download`,
+              });
+            }
+            if (documentId === 0) {
+              axios.post(uriApiMessage, {
+                chat_id: Number(ids),
+                parse_mode: "Markdown",
+                text: lastFinishedText,
+              });
+            }
           }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        let data = [];
+        if (params.id !== undefined) {
+          await axios
+            .get(`http://95.163.234.208:3500/lists/${listId}`)
+            .then((res) => {
+              data = res.data.usersId;
+            });
         }
-      });
-    } catch (err) {
-      console.log(err);
+        data.forEach((ids) => {
+          axios
+            .post(`https://api.telegram.org/bot${token}/sendPoll`, {
+              chat_id: Number(ids),
+              question: pollQuestion,
+              options: pollOptions,
+              is_anonymous: false,
+            })
+            .then((data) => {
+              console.log(data.data.result.poll.id);
+            });
+        });
+        await axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
+          active: "section_rigthbtnNone",
+        });
+        await axios
+          .get(`http://95.163.234.208:3500/tasks/${taskId}`)
+          .then(({ data }) => {
+            setEdit1(data.active);
+          });
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
   return (
@@ -194,7 +237,7 @@ export const Task = ({
             </button>
             <button
               onClick={() => {
-                setAddTaskActive(true);
+                setPollActive(true);
                 setTaskIdAdd(taskOrderId);
               }}
               className="addQButton"

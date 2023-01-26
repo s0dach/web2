@@ -368,6 +368,12 @@ export const Lists = () => {
               + добавить лекцию
             </div>
           )}
+          <div
+            // onClick={() => setVisiblePopup(true)}
+            className="section_addlection"
+          >
+            логи опросов
+          </div>
           <button
             className="section_helpbtn"
             onClick={() => setInstrActive(true)}
