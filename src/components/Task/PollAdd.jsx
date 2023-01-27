@@ -36,10 +36,14 @@ export const PollAdd = ({
         </span></h1>`,
       documentId: 0,
       completed: false,
-      pollId: 0,
+      pollId: [],
       pollOptions: OptionValues,
       pollQuestion: inputValue,
+      // pollDate: 0,
     };
+    // await axios.post("http://95.163.234.208:3500/polls", {
+    //   pollId: [],
+    // });
     await axios
       .post("http://95.163.234.208:3500/tasks", obj)
       .then(({ data }) => {

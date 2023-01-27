@@ -229,7 +229,6 @@ export const Tasks = ({
           <button
             onClick={() => {
               setPollActive(true);
-              setAddTaskActive(true);
             }}
             className="addQButton"
           >

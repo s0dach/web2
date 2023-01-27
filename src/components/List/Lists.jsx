@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { Header } from "../Header/Header";
 import "../Header/styles.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Tasks } from "../Task/Tasks";
 import { Instruction } from "../Task/Instruction";
 
@@ -209,6 +209,7 @@ export const Lists = () => {
         return item;
       });
       setLists(newList);
+      console.log(taskId);
       axios.delete("http://95.163.234.208:3500/tasks/" + taskId).catch((e) => {
         alert("Не удалось удалить задачу");
         console.log(e);
@@ -368,12 +369,13 @@ export const Lists = () => {
               + добавить лекцию
             </div>
           )}
-          <div
+          <Link
+            to="/polls"
             // onClick={() => setVisiblePopup(true)}
             className="section_addlection"
           >
             логи опросов
-          </div>
+          </Link>
           <button
             className="section_helpbtn"
             onClick={() => setInstrActive(true)}

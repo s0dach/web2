@@ -94,7 +94,8 @@ export const Task = ({
   };
 
   const sendLection = async (e) => {
-    if (!pollOptions) {
+    console.log(pollOptions);
+    if (pollOptions === undefined) {
       if (params.id !== undefined) {
         await axios
           .get(`http://95.163.234.208:3500/lists/${params.id}`)
@@ -205,7 +206,20 @@ export const Task = ({
               is_anonymous: false,
             })
             .then((data) => {
-              console.log(data.data.result.poll.id);
+              let arr = [];
+              arr.push(data.data.result.poll.id);
+              axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
+                pollId: arr,
+              });
+              // // console.log(data.data.result.date);
+              // axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
+              //   pollDate: data.data.result.date,
+              // });
+              // axios.patch("http://95.163.234.208:3500/polls", {
+              //              let arr = [];
+              // arr.push(data.data.result.date);
+              //   pollId: [],
+              // });
             });
         });
         await axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
