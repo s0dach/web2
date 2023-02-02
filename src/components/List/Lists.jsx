@@ -174,17 +174,23 @@ export const Lists = () => {
       complete: 0,
       usersId: [],
     });
+    console.log(lists);
     await lists.forEach((list) => {
       if (list.id === Number(params.id)) {
-        list.tasks.forEach(
-          (task) =>
+        list.tasks.forEach((task) => {
+          axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
+            active: "section_rigthbtn",
+          });
+          if (task.pollId.length !== 0) {
             axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
-              active: "section_rigthbtn",
-            }),
-          setTimeout(() => {
-            window.location.reload();
-          }, "1000")
-        );
+              pollId: [],
+              optionsReply: [],
+            });
+          }
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, "1000");
       }
     });
     setLists(lists);
@@ -209,7 +215,6 @@ export const Lists = () => {
         return item;
       });
       setLists(newList);
-      console.log(taskId);
       axios.delete("http://95.163.234.208:3500/tasks/" + taskId).catch((e) => {
         alert("Не удалось удалить задачу");
         console.log(e);

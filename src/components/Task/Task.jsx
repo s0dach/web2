@@ -94,7 +94,6 @@ export const Task = ({
   };
 
   const sendLection = async (e) => {
-    console.log(pollOptions);
     if (pollOptions === undefined) {
       if (params.id !== undefined) {
         await axios
@@ -197,20 +196,34 @@ export const Task = ({
               data = res.data.usersId;
             });
         }
-        data.forEach((ids) => {
-          axios
+        let arr = [];
+        data.forEach(async (ids) => {
+          await axios
             .post(`https://api.telegram.org/bot${token}/sendPoll`, {
               chat_id: Number(ids),
               question: pollQuestion,
               options: pollOptions,
               is_anonymous: false,
             })
-            .then((data) => {
-              let arr = [];
+            .then(async (data) => {
+              // console.log(data);
+              // console.log(taskId);
+              // let pollId = ;
+
               arr.push(data.data.result.poll.id);
               axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
                 pollId: arr,
               });
+              // await axios
+              //   .get(`http://95.163.234.208:3500/tasks/${taskId}`)
+              //   .then((res) => {
+              //     console.log(res);
+              //     //  let arr = [];
+              //     res.data.pollId.push(data.data.result.poll.id);
+              //     axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
+              //       pollId: res.data.pollId,
+              //     });
+              //   });
               // // console.log(data.data.result.date);
               // axios.patch(`http://95.163.234.208:3500/tasks/${taskId}`, {
               //   pollDate: data.data.result.date,
@@ -272,28 +285,29 @@ export const Task = ({
           <ReactQuill readOnly value={markdown(taskText)} theme={"bubble"} />
         </span>
         <div className="section_list_etc">
-          <div
-            className="header_icon1"
-            onClick={() => {
-              setEditTaskId(taskId);
-              setEditTaskText(taskText);
-              setActive(true);
-            }}
-          >
-            <svg
-              width="47"
-              height="47"
-              viewBox="0 0 50 50"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M35.4039 17.7808L32.2193 14.5961C31.8349 14.2117 31.3238 14 30.7801 14C30.2365 14 29.7254 14.2117 29.341 14.5961L16.0101 27.927C15.8836 28.0535 15.802 28.2181 15.7779 28.3954L15.0074 34.072C14.9731 34.3251 15.059 34.5798 15.2396 34.7604C15.394 34.9148 15.6025 35 15.818 35C15.8545 35 15.8913 34.9976 15.9281 34.9926L21.6045 34.2221C21.7819 34.198 21.9464 34.1165 22.073 33.9899L35.4039 20.6591C35.7883 20.2747 36 19.7635 36 19.2199C36 18.6763 35.7883 18.1652 35.4039 17.7808ZM21.1112 32.638L16.7731 33.2268L17.362 28.8888L26.8086 19.4422L30.5578 23.1914L21.1112 32.638ZM34.247 19.5022L31.7147 22.0345L27.9655 18.2853L30.4978 15.753C30.5996 15.6512 30.7184 15.636 30.7801 15.636C30.8419 15.636 30.9607 15.6512 31.0624 15.753L34.2471 18.9376C34.3488 19.0394 34.364 19.1581 34.364 19.2199C34.364 19.2816 34.3488 19.4004 34.247 19.5022Z"
-                fill="#68BFD6"
-              />
-              <circle cx="25" cy="25" r="24.5" stroke="#68BFD6" />
-            </svg>
+          <div className="header_icon1">
+            {!pollOptions ? (
+              <svg
+                onClick={() => {
+                  setEditTaskId(taskId);
+                  setEditTaskText(taskText);
+                  setActive(true);
+                }}
+                width="47"
+                height="47"
+                viewBox="0 0 50 50"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M35.4039 17.7808L32.2193 14.5961C31.8349 14.2117 31.3238 14 30.7801 14C30.2365 14 29.7254 14.2117 29.341 14.5961L16.0101 27.927C15.8836 28.0535 15.802 28.2181 15.7779 28.3954L15.0074 34.072C14.9731 34.3251 15.059 34.5798 15.2396 34.7604C15.394 34.9148 15.6025 35 15.818 35C15.8545 35 15.8913 34.9976 15.9281 34.9926L21.6045 34.2221C21.7819 34.198 21.9464 34.1165 22.073 33.9899L35.4039 20.6591C35.7883 20.2747 36 19.7635 36 19.2199C36 18.6763 35.7883 18.1652 35.4039 17.7808ZM21.1112 32.638L16.7731 33.2268L17.362 28.8888L26.8086 19.4422L30.5578 23.1914L21.1112 32.638ZM34.247 19.5022L31.7147 22.0345L27.9655 18.2853L30.4978 15.753C30.5996 15.6512 30.7184 15.636 30.7801 15.636C30.8419 15.636 30.9607 15.6512 31.0624 15.753L34.2471 18.9376C34.3488 19.0394 34.364 19.1581 34.364 19.2199C34.364 19.2816 34.3488 19.4004 34.247 19.5022Z"
+                  fill="#68BFD6"
+                />
+                <circle cx="25" cy="25" r="24.5" stroke="#68BFD6" />
+              </svg>
+            ) : null}
           </div>
+
           {editTaskId && editTaskText !== null ? (
             <EditTask
               editTaskId={editTaskId}
@@ -356,6 +370,7 @@ export const Task = ({
                   />
                 </svg>
               </div>
+
               <div
                 className="header_iconTrash"
                 onClick={() => onRemoveTask(listId, taskId, taskOrderId)}
