@@ -255,7 +255,7 @@ export const Tasks = ({
                 return acc;
               }, {});
               return task.pollId || poll ? (
-                poll ? (
+                task.pollId?.length !== 0 || poll ? (
                   <>
                     <div className="section_rightText">
                       Опрос {task.pollQuestion}
