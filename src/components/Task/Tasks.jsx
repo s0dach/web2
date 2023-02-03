@@ -24,6 +24,7 @@ export const Tasks = ({
   const [editTask, setEditTask] = React.useState(false);
   const [activeItem, setActiveItem] = React.useState(null);
   const [pollActive, setPollActive] = React.useState(false);
+  const [poll, setPoll] = React.useState(false);
 
   React.useEffect(() => {
     axios
@@ -31,7 +32,8 @@ export const Tasks = ({
       .then(({ data }) => {
         setLists(data);
       });
-  }, [setLists]);
+    console.log(poll);
+  }, [setPoll, setLists, poll]);
 
   // const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   // const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -205,6 +207,7 @@ export const Tasks = ({
                   taskText={c.text}
                   setAddTaskActive={setAddTaskActive}
                   key={c.id}
+                  setPoll={setPoll}
                 />
               ))
           ) : (
@@ -251,8 +254,8 @@ export const Tasks = ({
                 acc[el] = (acc[el] || 0) + 1;
                 return acc;
               }, {});
-              return task.pollId ? (
-                task.pollId?.length !== 0 ? (
+              return task.pollId || poll ? (
+                poll ? (
                   <>
                     <div className="section_rightText">
                       Опрос {task.pollQuestion}

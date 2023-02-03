@@ -26,6 +26,7 @@ export const Task = ({
   taskIdAdd,
   card,
   activeItem,
+  setPoll,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -94,6 +95,9 @@ export const Task = ({
   };
 
   const sendLection = async (e) => {
+    if (pollOptions !== undefined) {
+      setPoll(true);
+    }
     if (pollOptions === undefined) {
       if (params.id !== undefined) {
         await axios
