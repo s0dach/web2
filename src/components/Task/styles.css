@@ -28,6 +28,14 @@
   min-height: 354px;
   position: relative;
 }
+
+.modal_pollcontent {
+  padding: 20px;
+  border-radius: 35px;
+  background-color: #ffffff;
+  max-width: 662px;
+  position: relative;
+}
 .groupbtns {
   position: absolute;
   bottom: 10px;
