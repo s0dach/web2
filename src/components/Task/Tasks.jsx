@@ -32,7 +32,6 @@ export const Tasks = ({
       .then(({ data }) => {
         setLists(data);
       });
-    console.log(poll);
   }, [setPoll, setLists, poll]);
 
   // const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
