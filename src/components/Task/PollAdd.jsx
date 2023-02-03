@@ -86,6 +86,21 @@ export const PollAdd = ({
     setOptionValue7("");
     setOptionValue8("");
     setOptionValue9("");
+    setStateOption(false);
+    setStateOption1(false);
+    setStateOption2(false);
+    setStateOption3(false);
+    setStateOption4(false);
+    setStateOption5(false);
+    setStateOption6(false);
+    setStateOption7(false);
+    setStateOption8(false);
+    setStateOption9(false);
+    setStateOption10(false);
+    setStateOption11(false);
+    setStateOption12(false);
+    setStateOption13(false);
+    setStateOption14(false);
   };
   return (
     <div
