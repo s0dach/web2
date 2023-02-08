@@ -181,7 +181,7 @@ export const Lists = () => {
           axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
             active: "section_rigthbtn",
           });
-          if (task.pollId.length !== 0) {
+          if (task.pollId?.length !== 0) {
             axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
               pollId: [],
               optionsReply: [],
