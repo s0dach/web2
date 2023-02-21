@@ -6,16 +6,13 @@ import "react-quill/dist/quill.snow.css";
 import { ImageUpload } from "quill-image-upload";
 import axios from "axios";
 import { htmlToMarkdown } from "../Parser/Parser";
+import { useParams } from "react-router-dom";
 
 Quill.register("modules/imageUpload", ImageUpload);
 
-export const AddTask = ({
-  active,
-  setActive,
-  onAddTask,
-  activeItem,
-  taskIdAdd,
-}) => {
+export const AddTask = ({ active, setActive, materials, getMaterials }) => {
+  const params = useParams();
+
   const [inputValue, setInputValue] = React.useState("");
   const [file, setFile] = React.useState("Вложений нет");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -113,19 +110,20 @@ export const AddTask = ({
       .join("<img src=");
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
     const obj = {
-      order: activeItem.tasks.length + 1,
-      listId: activeItem.id,
-      active: "section_rigthbtn",
+      order: materials.length + 1,
+      owner: params.id,
       text: lastFinishedText,
       documentId: 0,
-      completed: false,
     };
     let id = 0;
     await axios
-      .post("http://95.163.234.208:3500/tasks", obj)
+      .post("http://127.0.0.1:7000/api/lection/addmaterial", obj)
       .then(({ data }) => {
-        id = data.id;
-        onAddTask(Number(activeItem.id), data, taskIdAdd);
+        id = data._id;
+        setIsLoading(false);
+        setInputValue("");
+        setActive(false);
+        getMaterials();
       })
       .catch((e) => {
         console.log(e);
@@ -140,9 +138,6 @@ export const AddTask = ({
         .then((e) => console.log("ok"))
         .catch((e) => console.log("Ошибка"));
       setFile("Вложений нет");
-      setIsLoading(false);
-      setActive(false);
-      setInputValue("");
     }, "1000");
   };
 

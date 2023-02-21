@@ -15,7 +15,6 @@ export const AppRouter = () => {
       {privateRoute.map((route) => (
         <Route key={route.path} element={route.element} path={route.path} />
       ))}
-      {/* <Navigate to="/" replace /> */}
       <Route path="*" element={<Navigate to="/posts/1" />} />
     </Routes>
   ) : (
@@ -23,7 +22,6 @@ export const AppRouter = () => {
       {publicRoute.map((route) => (
         <Route key={route.path} element={route.element} path={route.path} />
       ))}
-      {/* <Navigate to="/login" replace /> */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );

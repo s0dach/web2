@@ -4,32 +4,74 @@ import { useParams } from "react-router-dom";
 import "./styles.css";
 
 export const Header = ({
-  active,
-  setActive,
-  lectionName,
-  edit,
   setEdit,
-  stopLection,
-  startLection,
   onDublicateList,
+  lections,
+  getList,
+  getMaterials,
 }) => {
   const params = useParams();
 
+  const [list, setList] = React.useState(null);
+
+  React.useEffect(() => {
+    if (lections) {
+      const lection = lections.find((lection) => lection._id === params.id);
+      setList(lection);
+    }
+  }, [lections, params.id]);
+
   const onEdit = () => {
-    axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
-      editable: true,
-      active: false,
-    });
-    setActive(false);
-    setEdit(true);
+    axios
+      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+        ...list,
+        editable: true,
+        active: false,
+      })
+      .then(() => getList());
   };
-  const closeEdit = () => {
-    axios.patch(`http://95.163.234.208:3500/lists/${params.id}`, {
-      editable: false,
-      active: false,
-    });
-    setActive(false);
-    setEdit(false);
+
+  const startLection = async () => {
+    await axios
+      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+        ...list,
+        active: true,
+      })
+      .then(() => getList());
+  };
+
+  const stopLection = async () => {
+    await axios
+      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+        ...list,
+        active: false,
+        usersId: [],
+        pollId: [],
+        optionsReply: [],
+        published: 0,
+      })
+      .then(() => getList());
+    await axios
+      .patch("http://127.0.0.1:7000/api/lection/updatestoplection", {
+        complete: false,
+        id: list._id,
+      })
+      .then(() => {
+        getList();
+        getMaterials();
+      });
+  };
+  const closeEdit = async () => {
+    await axios
+      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+        ...list,
+        editable: false,
+        active: false,
+      })
+      .then(() => {
+        getList();
+        getMaterials();
+      });
   };
   return (
     <div className="header">
@@ -71,16 +113,16 @@ export const Header = ({
             ></ellipse>
           </g>
         </svg>
-        {active ? (
+        {list?.active ? (
           <button className="header_active">Активно</button>
         ) : (
           <button className="header_activeNone"></button>
         )}
       </div>
       <div className="header_section">
-        <div className="header_text">{lectionName}</div>
+        <div className="header_text">{list?.name}</div>
         <div className="header_icons">
-          {!edit ? (
+          {!list?.editable ? (
             <div className="header_icon1" onClick={onEdit}>
               <svg
                 width="47"
@@ -140,8 +182,8 @@ export const Header = ({
         </div>
       </div>
       <div className="header_right">
-        {!edit ? (
-          !active ? (
+        {!list?.editable ? (
+          !list?.active ? (
             <button onClick={startLection} className="header_button">
               Запустить сессию
             </button>
