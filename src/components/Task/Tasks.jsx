@@ -55,7 +55,14 @@ export const Tasks = ({
       const nums = [...materials];
       const [removed] = nums.splice(startIndex, 1);
       nums.splice(endIndex, 0, removed);
-      console.log(nums);
+      nums.map((mat, i) => {
+        mat.order = i + 1;
+        axios.patch("http://95.163.234.208:7000/api/lection/updatematerial", {
+          ...mat,
+        });
+        return mat;
+      });
+
       return nums;
     });
   };
@@ -92,7 +99,7 @@ export const Tasks = ({
                   <Droppable droppableId="droppable">
                     {(provided) => (
                       <div {...provided.droppableProps} ref={provided.innerRef}>
-                        {materials.map((material, index) => (
+                        {materials.sort(sortTasks).map((material, index) => (
                           <Task
                             index={index}
                             setCompleteMaterial={setCompleteMaterial}

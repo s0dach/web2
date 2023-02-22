@@ -79,8 +79,9 @@ export const Task = ({
         const first_link = links?.[0];
         const finishMyText = lastFinishedText.replace(
           "*Вложения:**",
-          "Вложения: "
+          undefined
         );
+        console.log(finishMyText);
         activeLection.usersId.forEach((ids) => {
           if (first_link !== undefined) {
             // Обрезаем конечный текст с картинкой
@@ -146,6 +147,7 @@ export const Task = ({
         console.log(err);
       }
     }
+    console.log(material);
     await axios
       .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
         ...material,
