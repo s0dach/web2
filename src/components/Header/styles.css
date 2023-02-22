@@ -55,6 +55,8 @@
   color: #fff;
   font-size: 1rem;
   line-height: 20px;
+  opacity: 0;
+  animation: ani 1s forwards;
 }
 .header_buttondis {
   cursor: pointer;
@@ -68,6 +70,11 @@
   color: #fff;
   font-size: 1rem;
   line-height: 20px;
+  opacity: 0;
+  animation: ani 1s forwards;
+}
+.header_buttondis:hover {
+  background: rgba(185, 44, 44, 0.4);
 }
 .header_buttonEditable {
   width: 280px;
@@ -81,6 +88,9 @@
   font-size: 1rem;
   line-height: 20px;
   opacity: 0.4;
+}
+.header_button:hover {
+  background: rgba(104, 191, 214, 0.6);
 }
 .header_icons {
   display: flex;
@@ -96,7 +106,10 @@
   color: #fff;
   font-size: 1rem;
   line-height: 20px;
+  opacity: 0;
+  animation: ani 1s forwards;
 }
+
 .header_activeNone {
   width: 163px;
   border: none;
@@ -471,6 +484,14 @@ ul {
 .lds-ellipsis div:nth-child(4) {
   left: 56px;
   animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes ani {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 @keyframes lds-ellipsis1 {
   0% {
