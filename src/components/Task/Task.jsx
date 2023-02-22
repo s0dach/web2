@@ -77,10 +77,7 @@ export const Task = ({
         const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
         const links = lastFinishedText.match(/https:\/\/[^\sZ]+/i);
         const first_link = links?.[0];
-        const finishMyText = lastFinishedText.replace(
-          "*Вложения:**",
-          undefined
-        );
+        const finishMyText = lastFinishedText.replace("[Вложения: ", undefined);
         console.log(finishMyText);
         activeLection.usersId.forEach((ids) => {
           if (first_link !== undefined) {
