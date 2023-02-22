@@ -117,7 +117,7 @@ export const AddTask = ({ active, setActive, materials, getMaterials }) => {
     };
     let id = 0;
     await axios
-      .post("http://127.0.0.1:7000/api/lection/addmaterial", obj)
+      .post("http://95.163.234.208:7000/api/lection/addmaterial", obj)
       .then(({ data }) => {
         id = data._id;
         setIsLoading(false);

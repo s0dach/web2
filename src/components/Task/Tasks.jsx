@@ -42,7 +42,7 @@ export const Tasks = ({
   React.useEffect(() => {
     if (activeLection) {
       axios
-        .get(`http://127.0.0.1:7000/api/list/getlist/${activeLection._id}`)
+        .get(`http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`)
         .then((res) => setCompleteMaterial(res.data.published));
     }
   }, [activeLection]);

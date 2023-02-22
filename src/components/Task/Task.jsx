@@ -46,10 +46,10 @@ export const Task = ({
   // Отправка материала в тг (вот эту хуйню починить)
   const sendLection = async () => {
     await axios
-      .get(`http://127.0.0.1:7000/api/list/getlist/${activeLection._id}`)
+      .get(`http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`)
       .then((res) => {
         axios
-          .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+          .patch("http://95.163.234.208:7000/api/list/updatelist/", {
             ...activeLection,
             published: res.data.published + 1,
           })
@@ -136,7 +136,7 @@ export const Task = ({
             })
             .then(async (data) => {
               arr.push(data.data.result.poll.id);
-              axios.patch(`http://127.0.0.1:7000/api/list/updatelist/`, {
+              axios.patch(`http://95.163.234.208:7000/api/list/updatelist/`, {
                 ...activeLection,
                 pollId: arr,
               });
@@ -147,7 +147,7 @@ export const Task = ({
       }
     }
     await axios
-      .patch("http://127.0.0.1:7000/api/lection/updatematerial", {
+      .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
         ...material,
         complete: true,
       })

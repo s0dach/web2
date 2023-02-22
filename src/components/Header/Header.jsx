@@ -23,7 +23,7 @@ export const Header = ({
 
   const onEdit = () => {
     axios
-      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+      .patch("http://95.163.234.208:7000/api/list/updatelist/", {
         ...list,
         editable: true,
         active: false,
@@ -33,7 +33,7 @@ export const Header = ({
 
   const startLection = async () => {
     await axios
-      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+      .patch("http://95.163.234.208:7000/api/list/updatelist/", {
         ...list,
         active: true,
       })
@@ -42,7 +42,7 @@ export const Header = ({
 
   const stopLection = async () => {
     await axios
-      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+      .patch("http://95.163.234.208:7000/api/list/updatelist/", {
         ...list,
         active: false,
         usersId: [],
@@ -52,7 +52,7 @@ export const Header = ({
       })
       .then(() => getList());
     await axios
-      .patch("http://127.0.0.1:7000/api/lection/updatestoplection", {
+      .patch("http://95.163.234.208:7000/api/lection/updatestoplection", {
         complete: false,
         id: list._id,
       })
@@ -63,7 +63,7 @@ export const Header = ({
   };
   const closeEdit = async () => {
     await axios
-      .patch("http://127.0.0.1:7000/api/list/updatelist/", {
+      .patch("http://95.163.234.208:7000/api/list/updatelist/", {
         ...list,
         editable: false,
         active: false,

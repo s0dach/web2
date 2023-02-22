@@ -23,7 +23,7 @@ export const Lists = () => {
   const getList = React.useCallback(async () => {
     try {
       await axios
-        .get("http://127.0.0.1:7000/api/list/getlist", {})
+        .get("http://95.163.234.208:7000/api/list/getlist", {})
         .then((res) => {
           setLections(res.data);
         });
@@ -42,7 +42,7 @@ export const Lists = () => {
       return;
     }
     axios
-      .post("http://127.0.0.1:7000/api/list/addlist", {
+      .post("http://95.163.234.208:7000/api/list/addlist", {
         listInputValue,
       })
       .then(() => {
@@ -61,7 +61,7 @@ export const Lists = () => {
     try {
       if (params.id !== "1") {
         await axios
-          .get("http://127.0.0.1:7000/api/lection/getmaterial", {
+          .get("http://95.163.234.208:7000/api/lection/getmaterial", {
             params: { params },
           })
           .then((res) => {
@@ -212,7 +212,7 @@ export const Lists = () => {
   const removeList = (id) => {
     if (window.confirm("Вы действительно хотите удалить лекцию?")) {
       axios
-        .delete(`http://127.0.0.1:7000/api/list/deletelist/${id}`)
+        .delete(`http://95.163.234.208:7000/api/list/deletelist/${id}`)
         .then(() => {
           getList();
         });
