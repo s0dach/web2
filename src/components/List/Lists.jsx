@@ -242,7 +242,6 @@ export const Lists = () => {
                       <div
                         onClick={() => {
                           navigate(`/posts/${lection._id}`);
-                          getMaterials();
                         }}
                         className="section_activelectname"
                         key={lection._id}
@@ -261,7 +260,6 @@ export const Lists = () => {
                         <div
                           onClick={() => {
                             navigate(`/posts/${lection._id}`);
-                            getMaterials();
                           }}
                           className="section_dislectname"
                           key={lection.id}
