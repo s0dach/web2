@@ -128,7 +128,14 @@ export const Tasks = ({
                 </>
               )
             ) : (
-              <div className="dp">Привет</div>
+              <div className="backgroundColor">
+                <div className="lds-ellipsis">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
             )}
             <div className="centerButtonbottom">
               <button

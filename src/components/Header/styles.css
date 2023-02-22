@@ -10,6 +10,8 @@
   top: 0;
   z-index: 100;
   position: fixed;
+  opacity: 0;
+  animation: ani 1s forwards;
 }
 .header_icon {
   width: 50px;
@@ -146,6 +148,8 @@
   height: 85vh;
   border-radius: 33px;
   margin-bottom: 10px;
+  opacity: 0;
+  animation: 1s ani forwards;
 }
 .section_lection {
   margin-left: 24.75%;
@@ -160,6 +164,8 @@
   height: 85vh;
   margin-bottom: 10px;
   right: 20px;
+  opacity: 0;
+  animation: 1s ani forwards;
 }
 
 .section_text {
@@ -282,6 +288,8 @@
   border: 1px solid #fff;
   border-radius: 35px;
   word-break: break-all;
+  opacity: 0;
+  animation: 1s ani forwards;
 }
 .section_listComplete {
   opacity: 0.5;
