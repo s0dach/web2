@@ -4,9 +4,11 @@ import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import ReactQuill from "react-quill";
 import { useParams } from "react-router-dom";
-import { EditTask } from "./EditTask";
 
 export const Task = ({
+  setEditMaterial,
+  setEditMaterialText,
+  setActiveModalEdit,
   material,
   lections,
   setPollActive,
@@ -14,13 +16,8 @@ export const Task = ({
   taskText,
   pollOptions,
   setAddTaskActive,
-  listId,
-  taskId,
   taskOrderId,
   documentId,
-  onEditTask,
-  active,
-  setActive,
   setTaskIdAdd,
   setPoll,
   getMaterials,
@@ -32,9 +29,8 @@ export const Task = ({
   const uriDoc = `https://api.telegram.org/bot${token}/sendDocument`;
   const uriApiPhoto = `https://api.telegram.org/bot${token}/sendPhoto`;
   const params = useParams();
-  const [editTaskId, setEditTaskId] = React.useState(null);
-  const [editTaskText, setEditTaskText] = React.useState(null);
   const [activeLection, setActiveLection] = React.useState(null);
+
   //тут начинается новое
   React.useEffect(() => {
     if (lections) {
@@ -43,7 +39,7 @@ export const Task = ({
     }
   }, [lections, params.id]);
 
-  // Отправка материала в тг (вот эту хуйню починить)
+  // Отправка материала в тг (вот эту хуйню переписать по хорошему)
   const sendLection = async () => {
     await axios
       .get(`http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`)
@@ -74,11 +70,12 @@ export const Task = ({
         const firstFinishedText = lastFinishedTextTest
           .split("![](")
           .join("<img src=");
-        const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
+        let lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
         const links = lastFinishedText.match(/https:\/\/[^\sZ]+/i);
         const first_link = links?.[0];
-        const finishMyText = lastFinishedText.replace("[Вложения: ", undefined);
-        console.log(finishMyText);
+        console.log(lastFinishedText);
+        lastFinishedText = lastFinishedText.split("[Вложения:")[0];
+        const finishMyText = lastFinishedText.split("[Вложения:")[0];
         activeLection.usersId.forEach((ids) => {
           if (first_link !== undefined) {
             // Обрезаем конечный текст с картинкой
@@ -144,7 +141,6 @@ export const Task = ({
         console.log(err);
       }
     }
-    console.log(material);
     await axios
       .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
         ...material,
@@ -154,12 +150,32 @@ export const Task = ({
         getMaterials();
       });
   };
-  //тут заканчивается
 
+  // Удаление материала
+  const removeMaterial = () => {
+    if (window.confirm(`Подтвердить удаление материала?`)) {
+      lections.forEach((lect) => {
+        if (material._id > lect.id) {
+          lect.order = lect.order - 1;
+          axios.patch("http://95.163.234.208:7000/api/lection/updatematerial", {
+            ...lect,
+          });
+        }
+      });
+      axios
+        .delete(
+          `http://95.163.234.208:7000/api/lection/deletelection/${material._id}`
+        )
+        .then(() => getMaterials());
+    }
+  };
+
+  // Стили на драгндроп
   const getItemStyle = (isDragging, draggableStyle) => ({
     background: isDragging ? "rgba(104,191,214, 0.4)" : "#fff",
     ...draggableStyle,
   });
+
   return (
     <>
       <div className="buttonDiv">
@@ -215,12 +231,12 @@ export const Task = ({
             </span>
             <div className="section_list_etc">
               <div className="header_icon1">
-                {!pollOptions ? (
+                {pollOptions.length === 0 ? (
                   <svg
                     onClick={() => {
-                      setEditTaskId(taskId);
-                      setEditTaskText(taskText);
-                      setActive(true);
+                      setActiveModalEdit(true);
+                      setEditMaterialText(material.text);
+                      setEditMaterial(material);
                     }}
                     width="47"
                     height="47"
@@ -236,18 +252,6 @@ export const Task = ({
                   </svg>
                 ) : null}
               </div>
-
-              {editTaskId && editTaskText !== null ? (
-                <EditTask
-                  editTaskId={editTaskId}
-                  editTaskText={markdown(editTaskText)}
-                  setEditTaskText={setEditTaskText}
-                  onEditTask={onEditTask}
-                  active={active}
-                  setActive={setActive}
-                  listId={listId}
-                />
-              ) : undefined}
 
               {!activeLection?.editable ? (
                 <button
@@ -265,50 +269,9 @@ export const Task = ({
                 </button>
               ) : (
                 <>
-                  <div className="editDiv">
-                    <svg
-                      width="14"
-                      height="12"
-                      viewBox="0 0 14 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.00001 0L13.9282 12H0.0718079L7.00001 0Z"
-                        fill="#68BFD6"
-                      />
-                    </svg>
-                    <svg
-                      width="1"
-                      height="36"
-                      viewBox="0 0 1 36"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M-1.57361e-06 36L0 -4.37114e-08L1 0L0.999998 36L-1.57361e-06 36Z"
-                        fill="#68BFD6"
-                      />
-                    </svg>
-                    <svg
-                      width="14"
-                      height="12"
-                      viewBox="0 0 14 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M6.99999 12L0.071786 -1.21137e-06L13.9282 0L6.99999 12Z"
-                        fill="#68BFD6"
-                      />
-                    </svg>
-                  </div>
-
                   <div
                     className="header_iconTrash"
-                    // onClick={() => onRemoveTask(listId, taskId, taskOrderId)}
+                    onClick={() => removeMaterial()}
                   >
                     <svg
                       width="47"

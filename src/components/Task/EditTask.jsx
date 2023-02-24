@@ -7,13 +7,13 @@ import { htmlToMarkdown } from "../Parser/Parser";
 import axios from "axios";
 
 export const EditTask = ({
-  active,
-  setActive,
-  onEditTask,
+  activeModalEdit,
+  setActiveModalEdit,
+  editMaterial,
   editTaskId,
-  editTaskText,
-  setEditTaskText,
-  listId,
+  getMaterials,
+  editMaterialText,
+  setEditMaterialText,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [file, setFile] = React.useState("Вложений нет");
@@ -97,7 +97,7 @@ export const EditTask = ({
   );
   const editComplete = () => {
     setIsLoading(true);
-    const htmlTooMarkdown = htmlToMarkdown(editTaskText);
+    const htmlTooMarkdown = htmlToMarkdown(editMaterialText);
     const firstFinishedTextTest = htmlTooMarkdown
       .split("![](")
       .join("<img src=");
@@ -114,8 +114,12 @@ export const EditTask = ({
           ? lastFinishedText
           : lastFinishedText + `\`[Вложения:${file.name}]\``,
     };
-    onEditTask(listId, obj.text, editTaskId);
-    // let id = 0;
+    axios
+      .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
+        ...editMaterial,
+        text: obj.text,
+      })
+      .then(() => getMaterials());
     setTimeout(() => {
       const date = new FormData();
       date.append("file", file);
@@ -126,21 +130,24 @@ export const EditTask = ({
         .catch((e) => console.log("Ошибка"));
       setFile("Вложений нет");
       setIsLoading(false);
-      setActive(false);
+      setActiveModalEdit(false);
     }, "2000");
   };
   return (
-    <div className={active ? "modal active" : "modal"}>
+    <div className={activeModalEdit ? "modal active" : "modal"}>
       <div className="modal_content" onClick={(e) => e.stopPropagation()}>
         <ReactQuill
-          value={editTaskText}
-          onChange={(e) => setEditTaskText(e)}
+          value={editMaterialText}
+          onChange={(e) => setEditMaterialText(e)}
           ref={editorRef}
           modules={modules}
-          placeholder="Введите текст"
+          placeholder="Введите текст. P.S. Если захотите добавить документ старайтесь делать это в последнюю очередь"
         />
         <div className="groupbtns">
-          <button onClick={() => setActive(false)} className="closeBtn">
+          <button
+            onClick={() => setActiveModalEdit(false)}
+            className="closeBtn"
+          >
             Отменить
           </button>
           <button

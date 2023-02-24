@@ -5,11 +5,10 @@ import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { Task } from "./Task";
 import { PollAdd } from "./PollAdd";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { EditTask } from "./EditTask";
 
 export const Tasks = ({
-  onAddTask,
-  onEditTask,
   lections,
   editable,
   materials,
@@ -24,6 +23,11 @@ export const Tasks = ({
   const [poll, setPoll] = React.useState(false);
   const [taskIdAdd, setTaskIdAdd] = React.useState(null);
   const [completeMaterial, setCompleteMaterial] = React.useState(0);
+
+  // Для редактирования
+  const [editMaterial, setEditMaterial] = React.useState(0);
+  const [activeModalEdit, setActiveModalEdit] = React.useState(false);
+  const [editMaterialText, setEditMaterialText] = React.useState("");
 
   // Сортировка лекций
   React.useEffect(() => {
@@ -80,6 +84,15 @@ export const Tasks = ({
       {materials ? (
         <>
           <div className="section_lection">
+            <EditTask
+              getMaterials={getMaterials}
+              editTaskId={editMaterial._id}
+              editMaterialText={editMaterialText}
+              setEditMaterialText={setEditMaterialText}
+              editMaterial={editMaterial}
+              activeModalEdit={activeModalEdit}
+              setActiveModalEdit={setActiveModalEdit}
+            />
             <AddTask
               materials={materials}
               active={addTaskActive}
@@ -87,7 +100,6 @@ export const Tasks = ({
               getMaterials={getMaterials}
             />
             <PollAdd
-              onAddTask={onAddTask}
               taskIdAdd={taskIdAdd}
               activeItem={activeLection}
               pollActive={pollActive}
@@ -101,6 +113,9 @@ export const Tasks = ({
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         {materials.sort(sortTasks).map((material, index) => (
                           <Task
+                            setEditMaterialText={setEditMaterialText}
+                            setEditMaterial={setEditMaterial}
+                            setActiveModalEdit={setActiveModalEdit}
                             index={index}
                             setCompleteMaterial={setCompleteMaterial}
                             getMaterials={getMaterials}
@@ -111,7 +126,6 @@ export const Tasks = ({
                             pollOptions={material.pollOptions}
                             setPollActive={setPollActive}
                             setTaskIdAdd={setTaskIdAdd}
-                            onEditTask={onEditTask}
                             documentId={material.documentId}
                             taskId={material._id}
                             taskOrderId={material.order}

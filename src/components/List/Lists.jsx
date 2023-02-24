@@ -78,56 +78,6 @@ export const Lists = () => {
   }, [getMaterials]);
   // тут конец правок
 
-  const onEditTask = (listId, taskText, id) => {
-    const newList = lists.map((list) => {
-      if (list.id === listId) {
-        list.tasks = list.tasks.map((task) => {
-          if (task.id === id) {
-            task.text = taskText;
-          }
-          return task;
-        });
-      }
-      return list;
-    });
-    setLists(newList);
-    axios
-      .patch("http://95.163.234.208:3500/tasks/" + id, {
-        text: taskText,
-      })
-      .catch((e) => {
-        alert("Не удалось обновить задачу");
-        console.log(e);
-      });
-  };
-
-  const onAddTask = (listId, taskObj, taskIdAdd) => {
-    const newList = lists.map((item) => {
-      if (item.id === listId) {
-        item.tasks = [...item.tasks, taskObj];
-
-        item.tasks.map((task) => {
-          if (taskIdAdd) {
-            if (task.order === taskIdAdd) {
-              taskObj.order = taskIdAdd;
-            }
-            if (taskObj.id !== task.id) {
-              if (task.order >= taskIdAdd) {
-                task.order = task.order + 1;
-              }
-            }
-          }
-          axios.patch("http://95.163.234.208:3500/tasks/" + task.id, {
-            order: task.order,
-          });
-          return task;
-        });
-      }
-      return item;
-    });
-    setLists(newList);
-  };
-
   const onEditListTitle = (id, title) => {
     const newList = lists.map((item) => {
       if (item.id === id) {
@@ -166,32 +116,6 @@ export const Lists = () => {
           });
       }
     });
-  };
-
-  // Удаление материала
-  const removeMaterial = (listId, taskId, taskOrderId) => {
-    if (window.confirm("Подтвердить удаление?")) {
-      const newList = lists.map((item) => {
-        if (item.id === listId) {
-          item.tasks = item.tasks.filter((task) => task.id !== taskId);
-        }
-        if (item.id === listId) {
-          item.tasks.forEach((task) => {
-            if (task.order > taskOrderId) {
-              axios.patch(`http://95.163.234.208:3500/tasks/${task.id}`, {
-                order: task.order - 1,
-              });
-            }
-          });
-        }
-        return item;
-      });
-      setLists(newList);
-      axios.delete("http://95.163.234.208:3500/tasks/" + taskId).catch((e) => {
-        alert("Не удалось удалить задачу");
-        console.log(e);
-      });
-    }
   };
 
   const editTitle = (listId, listName) => {
@@ -317,8 +241,6 @@ export const Lists = () => {
               getMaterials={getMaterials}
               lections={lections}
               setLists={setLists}
-              onAddTask={onAddTask}
-              onEditTask={onEditTask}
             />
           </div>
         </>
