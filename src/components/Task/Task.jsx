@@ -41,16 +41,6 @@ export const Task = ({
 
   // Отправка материала в тг (вот эту хуйню переписать по хорошему)
   const sendLection = async () => {
-    await axios
-      .get(`http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`)
-      .then((res) => {
-        axios
-          .patch("http://95.163.234.208:7000/api/list/updatelist/", {
-            ...activeLection,
-            published: res.data.published + 1,
-          })
-          .then((res) => setCompleteMaterial(res.data.published + 1));
-      });
     if (material.pollOptions.length !== 0) {
       setPoll(true);
     }
@@ -73,48 +63,162 @@ export const Task = ({
         let lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
         const links = lastFinishedText.match(/https:\/\/[^\sZ]+/i);
         const first_link = links?.[0];
-        console.log(lastFinishedText);
         lastFinishedText = lastFinishedText.split("[Вложения:")[0];
         const finishMyText = lastFinishedText.split("[Вложения:")[0];
-        activeLection.usersId.forEach((ids) => {
-          if (first_link !== undefined) {
-            // Обрезаем конечный текст с картинкой
+        if (activeLection.usersId.length !== 0) {
+          activeLection.usersId.forEach((ids) => {
+            if (first_link !== undefined) {
+              // Обрезаем конечный текст с картинкой
 
-            const firstFinishText = lastFinishedText.replace(
-              "<img src=" + first_link,
-              ""
-            );
+              const firstFinishText = lastFinishedText.replace(
+                "<img src=" + first_link,
+                ""
+              );
 
-            const lastFinishText = firstFinishText.replace(
-              ">" + first_link,
-              ""
-            );
-            const finishedText = lastFinishText.replace("<span><span>", "");
-            axios.post(uriApiPhoto, {
-              chat_id: Number(ids),
-              photo: first_link,
-              caption: finishedText,
-              parse_mode: "Markdown",
-            });
-          }
-          if (first_link === undefined) {
-            if (documentId !== "0") {
-              axios.post(uriDoc, {
-                chat_id: Number(ids),
-                parse_mode: "Markdown",
-                caption: finishMyText,
-                document: `https://drive.google.com/u/0/uc?id=${documentId}&export=download`,
-              });
+              const lastFinishText = firstFinishText.replace(
+                ">" + first_link,
+                ""
+              );
+              const finishedText = lastFinishText.replace("<span><span>", "");
+              axios
+                .post(uriApiPhoto, {
+                  chat_id: Number(ids),
+                  photo: first_link,
+                  caption: finishedText,
+                  parse_mode: "Markdown",
+                })
+                .then((res) => {
+                  axios
+                    .get(
+                      `http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`
+                    )
+                    .then((res) => {
+                      axios
+                        .patch(
+                          "http://95.163.234.208:7000/api/lection/updatematerial",
+                          {
+                            ...material,
+                            complete: true,
+                          }
+                        )
+                        .then(() => {
+                          getMaterials();
+                        });
+                      axios
+                        .patch(
+                          "http://95.163.234.208:7000/api/list/updatelist/",
+                          {
+                            ...activeLection,
+                            published: res.data.published + 1,
+                          }
+                        )
+                        .then((res) =>
+                          setCompleteMaterial(res.data.published + 1)
+                        );
+                    })
+                    .catch((err) =>
+                      alert(`Непредвиденная ошибка! Ошибка: ${err}`)
+                    );
+                })
+                .catch((err) => alert(`Непредвиденная ошибка! Ошибка: ${err}`));
             }
-            if (documentId === "0") {
-              axios.post(uriApiMessage, {
-                chat_id: Number(ids),
-                parse_mode: "Markdown",
-                text: lastFinishedText,
-              });
+            if (first_link === undefined) {
+              if (documentId !== "0") {
+                axios
+                  .post(uriDoc, {
+                    chat_id: Number(ids),
+                    parse_mode: "Markdown",
+                    caption: finishMyText,
+                    document: `https://drive.google.com/u/0/uc?id=${documentId}&export=download`,
+                  })
+                  .then((res) => {
+                    axios
+                      .get(
+                        `http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`
+                      )
+                      .then((res) => {
+                        axios
+                          .patch(
+                            "http://95.163.234.208:7000/api/lection/updatematerial",
+                            {
+                              ...material,
+                              complete: true,
+                            }
+                          )
+                          .then(() => {
+                            getMaterials();
+                          });
+                        axios
+                          .patch(
+                            "http://95.163.234.208:7000/api/list/updatelist/",
+                            {
+                              ...activeLection,
+                              published: res.data.published + 1,
+                            }
+                          )
+                          .then((res) =>
+                            setCompleteMaterial(res.data.published + 1)
+                          );
+                      })
+                      .catch((err) =>
+                        alert(`Непредвиденная ошибка! Ошибка: ${err}`)
+                      );
+                  })
+                  .catch((err) =>
+                    alert(`Непредвиденная ошибка! Ошибка: ${err}`)
+                  );
+              }
+              if (documentId === "0") {
+                axios
+                  .post(uriApiMessage, {
+                    chat_id: Number(ids),
+                    parse_mode: "Markdown",
+                    text: lastFinishedText,
+                  })
+                  .then((res) => {
+                    axios
+                      .get(
+                        `http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`
+                      )
+                      .then((res) => {
+                        axios
+                          .patch(
+                            "http://95.163.234.208:7000/api/lection/updatematerial",
+                            {
+                              ...material,
+                              complete: true,
+                            }
+                          )
+                          .then(() => {
+                            getMaterials();
+                          });
+                        axios
+                          .patch(
+                            "http://95.163.234.208:7000/api/list/updatelist/",
+                            {
+                              ...activeLection,
+                              published: res.data.published + 1,
+                            }
+                          )
+                          .then((res) =>
+                            setCompleteMaterial(res.data.published + 1)
+                          );
+                      })
+                      .catch((err) =>
+                        alert(`Непредвиденная ошибка! Ошибка: ${err}`)
+                      );
+                  })
+                  .catch((err) =>
+                    alert(`Непредвиденная ошибка! Ошибка: ${err}`)
+                  );
+              }
             }
-          }
-        });
+          });
+        } else {
+          alert(
+            `Публикация материала невозможна, так как список пользователей лекции "${activeLection.name}" пуст!`
+          );
+        }
       } catch (err) {
         console.log(err);
       }
@@ -135,20 +239,39 @@ export const Task = ({
                 ...activeLection,
                 pollId: arr,
               });
-            });
+            })
+            .then((res) => {
+              axios
+                .get(
+                  `http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`
+                )
+                .then((res) => {
+                  axios
+                    .patch(
+                      "http://95.163.234.208:7000/api/lection/updatematerial",
+                      {
+                        ...material,
+                        complete: true,
+                      }
+                    )
+                    .then(() => {
+                      getMaterials();
+                    });
+                  axios
+                    .patch("http://95.163.234.208:7000/api/list/updatelist/", {
+                      ...activeLection,
+                      published: res.data.published + 1,
+                    })
+                    .then((res) => setCompleteMaterial(res.data.published + 1));
+                })
+                .catch((err) => alert(`Непредвиденная ошибка! Ошибка: ${err}`));
+            })
+            .catch((err) => alert(`Непредвиденная ошибка! Ошибка: ${err}`));
         });
       } catch (err) {
         console.log(err);
       }
     }
-    await axios
-      .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
-        ...material,
-        complete: true,
-      })
-      .then(() => {
-        getMaterials();
-      });
   };
 
   // Удаление материала

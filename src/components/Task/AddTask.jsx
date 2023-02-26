@@ -149,7 +149,7 @@ export const AddTask = ({ active, setActive, materials, getMaterials }) => {
           onChange={(e) => setInputValue(e)}
           ref={editorRef}
           modules={modules}
-          placeholder="Введите текст. P.S. Если захотите добавить документ старайтесь делать это в последнюю очередь"
+          placeholder="Введите текст. Для избежания возникновения проблем при передачи контента в телеграм, документы и изображения старайтесь добавлять в последнюю очередь"
         />
         <div className="groupbtns">
           <button onClick={() => setActive(false)} className="closeBtn">

@@ -160,50 +160,56 @@ export const Lists = () => {
           <div className="section">
             <div className="section_left">
               <div className="section_text">Активные</div>
-              {lections
-                ? lections.map((lection) =>
-                    lection.active ? (
-                      <div
-                        onClick={() => {
-                          navigate(`/posts/${lection._id}`);
-                        }}
-                        className="section_activelectname"
-                        key={lection._id}
-                      >
-                        {lection.name}
-                      </div>
-                    ) : undefined
-                  )
-                : "Загрузка."}
-              <div className="border"></div>
-              <div className="section_text">Доступные</div>
-              {lections
-                ? lections.map((lection) =>
-                    !lection.active ? (
-                      <div className="listsTable" key={lection._id}>
+              <div className="section_overflow">
+                {lections
+                  ? lections.map((lection) =>
+                      lection.active ? (
                         <div
                           onClick={() => {
                             navigate(`/posts/${lection._id}`);
                           }}
-                          className="section_dislectname"
-                          key={lection.id}
+                          className="section_activelectname"
+                          key={lection._id}
                         >
                           {lection.name}
                         </div>
-                        <div className="flexTable">
+                      ) : undefined
+                    )
+                  : "Загрузка."}
+              </div>
+              <div className="border"></div>
+              <div className="section_text">Доступные</div>
+              <div className="section_overflow">
+                {lections
+                  ? lections.map((lection) =>
+                      !lection.active ? (
+                        <div className="listsTable" key={lection._id}>
                           <div
-                            onClick={() => editTitle(lection.id, lection.name)}
+                            onClick={() => {
+                              navigate(`/posts/${lection._id}`);
+                            }}
+                            className="section_dislectname"
+                            key={lection.id}
                           >
-                            <EditCircle />
+                            {lection.name}
                           </div>
-                          <div onClick={() => removeList(lection._id)}>
-                            <RemoveCircle />
+                          <div className="flexTable">
+                            <div
+                              onClick={() =>
+                                editTitle(lection.id, lection.name)
+                              }
+                            >
+                              <EditCircle />
+                            </div>
+                            <div onClick={() => removeList(lection._id)}>
+                              <RemoveCircle />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : undefined
-                  )
-                : "Загрузка."}
+                      ) : undefined
+                    )
+                  : "Загрузка."}
+              </div>
               <div className="border"></div>
               {visiblePopup ? (
                 <div className="addListBlock">

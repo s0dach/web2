@@ -380,6 +380,8 @@ span {
   justify-content: center;
 }
 .poll_button {
+  cursor: pointer;
+  background-color: #fff;
   height: 30px;
   border-radius: 19px;
   border: 1px solid grey;
@@ -447,6 +449,29 @@ ul {
   margin-left: 3px;
   color: white;
 }
+.section_overflow {
+  overflow-y: hidden;
+  max-height: 25%;
+}
+.section_overflow:hover {
+  overflow: auto;
+  max-height: 25%;
+}
+.section_overflow::-webkit-scrollbar {
+  width: 8px; /* ширина всей полосы прокрутки */
+}
+.section_overflow::-webkit-scrollbar-track {
+  background: #fff; /* цвет зоны отслеживания */
+}
+.section_overflow::-webkit-scrollbar-thumb {
+  background-color: #68bfd6; /* цвет бегунка */
+  border-radius: 20px; /* округлось бегунка */
+  border: 3px solid #fff; /* отступ вокруг бегунка */
+}
+/* .section_overflow::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+} */
 
 /* loader */
 .backgroundColor {
@@ -493,6 +518,7 @@ ul {
   left: 56px;
   animation: lds-ellipsis3 0.6s infinite;
 }
+
 @keyframes ani {
   0% {
     opacity: 0;

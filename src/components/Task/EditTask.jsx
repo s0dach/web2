@@ -141,7 +141,7 @@ export const EditTask = ({
           onChange={(e) => setEditMaterialText(e)}
           ref={editorRef}
           modules={modules}
-          placeholder="Введите текст. P.S. Если захотите добавить документ старайтесь делать это в последнюю очередь"
+          placeholder="Введите текст. Для избежания возникновения проблем при передачи контента в телеграм, документы и изображения старайтесь добавлять в последнюю очередь"
         />
         <div className="groupbtns">
           <button
