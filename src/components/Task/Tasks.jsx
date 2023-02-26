@@ -98,6 +98,7 @@ export const Tasks = ({
               active={addTaskActive}
               setActive={setAddTaskActive}
               getMaterials={getMaterials}
+              taskIdAdd={taskIdAdd}
             />
             <PollAdd
               taskIdAdd={taskIdAdd}

@@ -10,7 +10,13 @@ import { useParams } from "react-router-dom";
 
 Quill.register("modules/imageUpload", ImageUpload);
 
-export const AddTask = ({ active, setActive, materials, getMaterials }) => {
+export const AddTask = ({
+  active,
+  setActive,
+  materials,
+  getMaterials,
+  taskIdAdd,
+}) => {
   const params = useParams();
 
   const [inputValue, setInputValue] = React.useState("");
@@ -109,26 +115,62 @@ export const AddTask = ({ active, setActive, materials, getMaterials }) => {
       .split("![](")
       .join("<img src=");
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
-    const obj = {
-      order: materials.length + 1,
-      owner: params.id,
-      text: lastFinishedText,
-      documentId: 0,
-    };
     let id = 0;
-    await axios
-      .post("http://95.163.234.208:7000/api/lection/addmaterial", obj)
-      .then(({ data }) => {
-        id = data._id;
-        setIsLoading(false);
-        setInputValue("");
-        setActive(false);
-        getMaterials();
-      })
-      .catch((e) => {
-        console.log(e);
-        alert("Ошибка при добавлении задачи!");
+    if (taskIdAdd === null) {
+      await axios
+        .post("http://95.163.234.208:7000/api/lection/addmaterial", {
+          order: materials.length + 1,
+          owner: params.id,
+          text: lastFinishedText,
+          documentId: 0,
+        })
+        .then(({ data }) => {
+          id = data._id;
+          setIsLoading(false);
+          setInputValue("");
+          setActive(false);
+          getMaterials();
+        })
+        .catch((e) => {
+          console.log(e);
+          alert("Ошибка при добавлении материала!");
+        });
+    } else {
+      await materials.forEach((material) => {
+        console.log(material);
+        if (Number(material.order) >= Number(taskIdAdd)) {
+          axios
+            .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
+              _id: material._id,
+              order: material.order + 1,
+              text: material.text,
+              documentId: 0,
+            })
+            .catch((e) => {
+              console.log(e);
+              alert("Ошибка при добавлении материала!");
+            });
+        }
       });
+      await axios
+        .post("http://95.163.234.208:7000/api/lection/addmaterial", {
+          order: taskIdAdd,
+          owner: params.id,
+          text: lastFinishedText,
+          documentId: 0,
+        })
+        .then(({ data }) => {
+          id = data._id;
+          setIsLoading(false);
+          setInputValue("");
+          setActive(false);
+          getMaterials();
+        })
+        .catch((e) => {
+          console.log(e);
+          alert("Ошибка при добавлении материала!");
+        });
+    }
     setTimeout(() => {
       const date = new FormData();
       date.append("file", file);
