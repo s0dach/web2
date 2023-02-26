@@ -242,6 +242,7 @@ export const Lists = () => {
               </div>
             </div>
             <Tasks
+              getList={getList}
               setMaterials={setMaterials}
               materials={materials}
               getMaterials={getMaterials}

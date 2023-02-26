@@ -309,7 +309,12 @@ span {
   line-height: 11px;
   text-transform: uppercase;
 }
+.section_refresh {
+  margin-left: 10px;
+  cursor: pointer;
+}
 .section_number {
+  display: flex;
   margin-left: 22px;
   margin-top: 20px;
   font-size: 1.125rem;

@@ -23,6 +23,7 @@ export const Task = ({
   getMaterials,
   setCompleteMaterial,
   index,
+  materials,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -275,13 +276,13 @@ export const Task = ({
   };
 
   // Удаление материала
-  const removeMaterial = () => {
+  const removeMaterial = (order) => {
     if (window.confirm(`Подтвердить удаление материала?`)) {
-      lections.forEach((lect) => {
-        if (material._id > lect.id) {
-          lect.order = lect.order - 1;
+      materials.forEach((mat) => {
+        if (mat.order >= order) {
+          mat.order = mat.order - 1;
           axios.patch("http://95.163.234.208:7000/api/lection/updatematerial", {
-            ...lect,
+            ...mat,
           });
         }
       });
@@ -308,7 +309,6 @@ export const Task = ({
               onClick={() => {
                 setAddTaskActive(true);
                 setTaskIdAdd(taskOrderId);
-                console.log("dsads", taskOrderId);
               }}
               className="addButton"
             >
@@ -395,7 +395,9 @@ export const Task = ({
                 <>
                   <div
                     className="header_iconTrash"
-                    onClick={() => removeMaterial()}
+                    onClick={() => {
+                      removeMaterial(material.order);
+                    }}
                   >
                     <svg
                       width="47"

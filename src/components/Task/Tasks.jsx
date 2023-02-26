@@ -7,6 +7,7 @@ import { Task } from "./Task";
 import { PollAdd } from "./PollAdd";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { EditTask } from "./EditTask";
+import { ReactComponent as Refresh } from "../../assets/svg/refresh.svg";
 
 export const Tasks = ({
   lections,
@@ -14,6 +15,7 @@ export const Tasks = ({
   materials,
   getMaterials,
   setMaterials,
+  getList,
 }) => {
   const location = useLocation();
   const params = useParams();
@@ -114,6 +116,7 @@ export const Tasks = ({
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         {materials.sort(sortTasks).map((material, index) => (
                           <Task
+                            materials={materials}
                             setEditMaterialText={setEditMaterialText}
                             setEditMaterial={setEditMaterial}
                             setActiveModalEdit={setActiveModalEdit}
@@ -163,6 +166,7 @@ export const Tasks = ({
               <button
                 onClick={() => {
                   setAddTaskActive(true);
+                  setTaskIdAdd(null);
                 }}
                 className="addButton"
               >
@@ -182,6 +186,9 @@ export const Tasks = ({
             <div className="section_rightText">количество участников</div>
             <div className="section_number">
               {activeLection ? activeLection.usersId.length : "NAN"}
+              <div className="section_refresh" onClick={() => getList()}>
+                <Refresh />
+              </div>
             </div>
             <div className="section_rightText">Опубликовано</div>
             <div className="section_number">
