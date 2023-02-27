@@ -53,6 +53,10 @@ export const Tasks = ({
     }
   }, [activeLection]);
 
+  React.useEffect(() => {
+    getList();
+  }, [getList]);
+
   const reorderNumbers = (result) => {
     const startIndex = result.source.index;
     const endIndex = result.destination.index;
@@ -116,7 +120,8 @@ export const Tasks = ({
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         {materials.sort(sortTasks).map((material, index) => (
                           <Task
-                            getMember={getList}
+                            activeLection={activeLection}
+                            getList={getList}
                             materials={materials}
                             setEditMaterialText={setEditMaterialText}
                             setEditMaterial={setEditMaterial}
