@@ -25,6 +25,7 @@ export const Task = ({
   index,
   activeLection,
   materials,
+  getList,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -61,6 +62,7 @@ export const Task = ({
 
   // Отправка материала в тг (вот эту хуйню переписать по хорошему)
   const sendLection = async () => {
+    await getList();
     await axios
       .get("http://95.163.234.208:7000/api/list/getlist", {})
       .then((res) => {
