@@ -3,13 +3,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import "./styles.css";
 
-export const Header = ({
-  setEdit,
-  onDublicateList,
-  lections,
-  getList,
-  getMaterials,
-}) => {
+export const Header = ({ lections, getList, getMaterials, materials }) => {
   const params = useParams();
 
   const [list, setList] = React.useState(null);
@@ -61,6 +55,7 @@ export const Header = ({
         getMaterials();
       });
   };
+
   const closeEdit = async () => {
     await axios
       .patch("http://95.163.234.208:7000/api/list/updatelist/", {
@@ -73,6 +68,35 @@ export const Header = ({
         getMaterials();
       });
   };
+
+  const onDublicateList = async () => {
+    console.log(list);
+    console.log(materials);
+    await axios
+      .post("http://95.163.234.208:7000/api/list/dublicatelist", {
+        name: list.name,
+      })
+      .then((res) => {
+        console.log(res);
+        materials.forEach((material) => {
+          axios.post("http://95.163.234.208:7000/api/lection/addmaterial", {
+            order: material.order,
+            owner: res.data._id,
+            text: material.text,
+            documentId: material.documentId,
+            pollId: material.pollId,
+            complete: false,
+          });
+        });
+        getList();
+        getMaterials();
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Ошибка при повторении лекции!");
+      });
+  };
+
   return (
     <div className="header">
       <div className="header_left">

@@ -152,6 +152,7 @@ export const Lists = () => {
             setInstrActive={setInstrActive}
           />
           <Header
+            materials={materials}
             getMaterials={getMaterials}
             getList={getList}
             lections={lections}
@@ -183,14 +184,14 @@ export const Lists = () => {
                 {lections
                   ? lections.map((lection) =>
                       !lection.active ? (
-                        <div className="listsTable" key={lection._id}>
-                          <div
-                            onClick={() => {
-                              navigate(`/posts/${lection._id}`);
-                            }}
-                            className="section_dislectname"
-                            key={lection.id}
-                          >
+                        <div
+                          className="listsTable"
+                          key={lection._id}
+                          onClick={() => {
+                            navigate(`/posts/${lection._id}`);
+                          }}
+                        >
+                          <div className="section_dislectname">
                             {lection.name}
                           </div>
                           <div className="flexTable">

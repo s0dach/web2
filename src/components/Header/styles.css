@@ -194,8 +194,11 @@
   line-height: 24px;
   color: #707070;
 }
-.section_dislectname:hover {
+.listsTable:hover .section_dislectname {
   color: #b0b0b0;
+  cursor: pointer;
+}
+.listsTable:hover {
   cursor: pointer;
 }
 
