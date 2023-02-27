@@ -26,6 +26,8 @@ export const Task = ({
   activeLection,
   materials,
   getList,
+  setErrorText,
+  setErrorModal,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -146,13 +148,15 @@ export const Task = ({
                               setCompleteMaterial(res.data.published + 1)
                             );
                         })
-                        .catch((err) =>
-                          alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                        );
+                        .catch((err) => {
+                          setErrorText(`Непредвиденная ошибка! Ошибка: ${err}`);
+                          setErrorModal(true);
+                        });
                     })
-                    .catch((err) =>
-                      alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                    );
+                    .catch((err) => {
+                      setErrorText(`Непредвиденная ошибка! Ошибка: ${err}`);
+                      setErrorModal(true);
+                    });
                 }
                 if (first_link === undefined) {
                   if (documentId !== "0") {
@@ -193,13 +197,17 @@ export const Task = ({
                                 setCompleteMaterial(res.data.published + 1)
                               );
                           })
-                          .catch((err) =>
-                            alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                          );
+                          .catch((err) => {
+                            setErrorText(
+                              `Непредвиденная ошибка! Ошибка: ${err}`
+                            );
+                            setErrorModal(true);
+                          });
                       })
-                      .catch((err) =>
-                        alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                      );
+                      .catch((err) => {
+                        setErrorText(`Непредвиденная ошибка! Ошибка: ${err}`);
+                        setErrorModal(true);
+                      });
                   }
                   if (documentId === "0") {
                     axios
@@ -238,20 +246,25 @@ export const Task = ({
                                 setCompleteMaterial(res.data.published + 1)
                               );
                           })
-                          .catch((err) =>
-                            alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                          );
+                          .catch((err) => {
+                            setErrorText(
+                              `Непредвиденная ошибка! Ошибка: ${err}`
+                            );
+                            setErrorModal(true);
+                          });
                       })
-                      .catch((err) =>
-                        alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                      );
+                      .catch((err) => {
+                        setErrorText(`Непредвиденная ошибка! Ошибка: ${err}`);
+                        setErrorModal(true);
+                      });
                   }
                 }
               });
             } else {
-              alert(
+              setErrorText(
                 `Публикация материала невозможна, так как список пользователей лекции "${activeLection.name}" пуст!`
               );
+              setErrorModal(true);
             }
           } catch (err) {
             console.log(err);
@@ -314,18 +327,21 @@ export const Task = ({
                             setCompleteMaterial(res.data.published + 1)
                           );
                       })
-                      .catch((err) =>
-                        alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                      );
+                      .catch((err) => {
+                        setErrorText(`Непредвиденная ошибка! Ошибка: ${err}`);
+                        setErrorModal(true);
+                      });
                   })
-                  .catch((err) =>
-                    alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                  );
+                  .catch((err) => {
+                    setErrorText(`Непредвиденная ошибка! Ошибка: ${err}`);
+                    setErrorModal(true);
+                  });
               });
             } else {
-              alert(
+              setErrorText(
                 `Публикация опроса невозможна, так как список пользователей лекции "${activeLection.name}" пуст!`
               );
+              setErrorModal(true);
             }
           } catch (err) {
             console.log(err);

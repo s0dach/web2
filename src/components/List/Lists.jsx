@@ -5,6 +5,7 @@ import "../Header/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { Tasks } from "../Task/Tasks";
 import { Instruction } from "../Task/Instruction";
+import { Error } from "../Task/Error";
 import { ReactComponent as RemoveCircle } from "../../assets/svg/remove.svg";
 import { ReactComponent as EditCircle } from "../../assets/svg/edit.svg";
 
@@ -19,6 +20,8 @@ export const Lists = () => {
   const [materials, setMaterials] = React.useState(null);
   // Отсюда пойдут основные правки mongodb
 
+  const [errorText, setErrorText] = React.useState(null);
+  const [errorModal, setErrorModal] = React.useState(false);
   // Получение лекций
   const getList = React.useCallback(async () => {
     try {
@@ -136,6 +139,11 @@ export const Lists = () => {
 
   return (
     <>
+      <Error
+        errorText={errorText}
+        errorModal={errorModal}
+        setErrorModal={setErrorModal}
+      />
       {lections ? (
         <>
           <Instruction
@@ -143,6 +151,8 @@ export const Lists = () => {
             setInstrActive={setInstrActive}
           />
           <Header
+            setErrorText={setErrorText}
+            setErrorModal={setErrorModal}
             materials={materials}
             getMaterials={getMaterials}
             getList={getList}
@@ -230,6 +240,8 @@ export const Lists = () => {
               </div>
             </div>
             <Tasks
+              setErrorText={setErrorText}
+              setErrorModal={setErrorModal}
               getList={getList}
               setMaterials={setMaterials}
               materials={materials}

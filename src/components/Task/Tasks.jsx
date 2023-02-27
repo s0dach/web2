@@ -16,6 +16,8 @@ export const Tasks = ({
   getMaterials,
   setMaterials,
   getList,
+  setErrorText,
+  setErrorModal,
 }) => {
   const location = useLocation();
   const params = useParams();
@@ -121,6 +123,8 @@ export const Tasks = ({
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         {materials.sort(sortTasks).map((material, index) => (
                           <Task
+                            setErrorText={setErrorText}
+                            setErrorModal={setErrorModal}
                             activeLection={activeLection}
                             getList={getList}
                             materials={materials}

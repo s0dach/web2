@@ -3,7 +3,14 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import "./styles.css";
 
-export const Header = ({ lections, getList, getMaterials, materials }) => {
+export const Header = ({
+  lections,
+  getList,
+  getMaterials,
+  materials,
+  setErrorModal,
+  setErrorText,
+}) => {
   const params = useParams();
 
   const [list, setList] = React.useState(null);
@@ -93,7 +100,8 @@ export const Header = ({ lections, getList, getMaterials, materials }) => {
       })
       .catch((err) => {
         console.log(err);
-        alert("Ошибка при повторении лекции!");
+        setErrorText("Ошибка при повторении лекции!");
+        setErrorModal(true);
       });
   };
 
