@@ -587,6 +587,7 @@ ul {
   justify-content: center;
   opacity: 0;
   animation: show-modal 0.7s ease-in-out;
+  pointer-events: none;
 }
 
 .modalError {
@@ -599,12 +600,10 @@ ul {
   text-align: center;
   overflow: hidden;
 }
-.modalError.hide {
-  animation: hide-modal 0.6s ease-in-out both;
-}
 .frame.active {
   z-index: 1015454;
   opacity: 1;
+  pointer-events: all;
 }
 .Modaltitle {
   display: block;
