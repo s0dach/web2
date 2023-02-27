@@ -116,6 +116,7 @@ export const Tasks = ({
                       <div {...provided.droppableProps} ref={provided.innerRef}>
                         {materials.sort(sortTasks).map((material, index) => (
                           <Task
+                            getMember={getList}
                             materials={materials}
                             setEditMaterialText={setEditMaterialText}
                             setEditMaterial={setEditMaterial}

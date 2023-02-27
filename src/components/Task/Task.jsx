@@ -24,6 +24,7 @@ export const Task = ({
   setCompleteMaterial,
   index,
   materials,
+  getMember,
 }) => {
   const token = "5960420624:AAEvKvDBpDv5u3aSG2_3jcLULzkZq85aKkA";
   const uriApiMessage = `https://api.telegram.org/bot${token}/sendMessage`;
@@ -32,16 +33,36 @@ export const Task = ({
   const params = useParams();
   const [activeLection, setActiveLection] = React.useState(null);
 
-  //тут начинается новое
-  React.useEffect(() => {
-    if (lections) {
-      const lection = lections.find((lection) => lection._id === params.id);
-      setActiveLection(lection);
+  // Получение лекций
+  const getList = React.useCallback(async () => {
+    try {
+      await axios
+        .get("http://95.163.234.208:7000/api/list/getlist", {})
+        .then((res) => {
+          const lection = res.data.find((lection) => lection._id === params.id);
+          setActiveLection(lection);
+        });
+    } catch (err) {
+      console.log(err);
     }
-  }, [lections, params.id]);
+  }, [params.id]);
+
+  React.useEffect(() => {
+    getList();
+  }, [getList]);
+
+  // //тут начинается новое
+  // React.useEffect(() => {
+  //   if (lections) {
+  //     const lection = lections.find((lection) => lection._id === params.id);
+  //     setActiveLection(lection);
+  //   }
+  // }, [lections, params.id]);
 
   // Отправка материала в тг (вот эту хуйню переписать по хорошему)
   const sendLection = async () => {
+    await getList();
+    await getMember();
     if (material.pollOptions.length !== 0) {
       setPoll(true);
     }
@@ -384,9 +405,7 @@ export const Task = ({
                       ? "section_rigthbtn"
                       : "section_rigthbtnNone"
                   }
-                  onClick={() => {
-                    sendLection();
-                  }}
+                  onClick={() => sendLection()}
                   disabled={material.complete}
                 >
                   Публиковать

@@ -51,7 +51,7 @@ table {
 .container {
   display: flex;
   background: #68bfd6;
-  max-width: 1440px;
+  max-width: 100%;
   min-height: 100vh;
   justify-content: center;
   align-items: center;
