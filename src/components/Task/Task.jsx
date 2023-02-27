@@ -405,7 +405,10 @@ export const Task = ({
                       ? "section_rigthbtn"
                       : "section_rigthbtnNone"
                   }
-                  onClick={() => sendLection()}
+                  onClick={async () => {
+                    await getList();
+                    await sendLection();
+                  }}
                   disabled={material.complete}
                 >
                   Публиковать
