@@ -476,11 +476,25 @@ ul {
   border-radius: 20px; /* округлось бегунка */
   border: 3px solid #fff; /* отступ вокруг бегунка */
 }
-/* .section_overflow::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-} */
-
+.section_overflowpoll {
+  overflow-y: hidden;
+  max-height: 60%;
+}
+.section_overflowpoll:hover {
+  overflow: auto;
+  max-height: 60%;
+}
+.section_overflowpoll::-webkit-scrollbar {
+  width: 8px; /* ширина всей полосы прокрутки */
+}
+.section_overflowpoll::-webkit-scrollbar-track {
+  background: #fff; /* цвет зоны отслеживания */
+}
+.section_overflowpoll::-webkit-scrollbar-thumb {
+  background-color: #68bfd6; /* цвет бегунка */
+  border-radius: 20px; /* округлось бегунка */
+  border: 3px solid #fff; /* отступ вокруг бегунка */
+}
 /* loader */
 .backgroundColor {
   display: flex;

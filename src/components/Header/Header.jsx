@@ -40,17 +40,20 @@ export const Header = ({ lections, getList, getMaterials, materials }) => {
         ...list,
         active: false,
         usersId: [],
-        pollId: [],
-        optionsReply: [],
         published: 0,
       })
-      .then(() => getList());
-    await axios
-      .patch("http://95.163.234.208:7000/api/lection/updatestoplection", {
-        complete: false,
-        id: list._id,
-      })
       .then(() => {
+        materials.forEach((mat) => {
+          axios.patch(
+            "http://95.163.234.208:7000/api/lection/updatematerial/",
+            {
+              ...mat,
+              optionsReply: [],
+              pollId: [],
+              complete: false,
+            }
+          );
+        });
         getList();
         getMaterials();
       });
@@ -70,14 +73,11 @@ export const Header = ({ lections, getList, getMaterials, materials }) => {
   };
 
   const onDublicateList = async () => {
-    console.log(list);
-    console.log(materials);
     await axios
       .post("http://95.163.234.208:7000/api/list/dublicatelist", {
         name: list.name,
       })
       .then((res) => {
-        console.log(res);
         materials.forEach((material) => {
           axios.post("http://95.163.234.208:7000/api/lection/addmaterial", {
             order: material.order,

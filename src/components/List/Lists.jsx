@@ -78,16 +78,6 @@ export const Lists = () => {
   }, [getMaterials]);
   // тут конец правок
 
-  const onEditListTitle = (id, title) => {
-    const newList = lists.map((item) => {
-      if (item.id === id) {
-        item.name = title;
-      }
-      return item;
-    });
-    setLists(newList);
-  };
-
   const onDublicateList = async () => {
     lists?.forEach(async (list) => {
       if (list.id === Number(params.id)) {

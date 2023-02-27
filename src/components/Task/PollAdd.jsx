@@ -1,13 +1,14 @@
 import axios from "axios";
 import React from "react";
+import { useParams } from "react-router-dom";
 import "../Header/styles.css";
 
 export const PollAdd = ({
   pollActive,
   setPollActive,
-  activeItem,
-  onAddTask,
+  materials,
   taskIdAdd,
+  getMaterials,
 }) => {
   const [inputValue, setInputValue] = React.useState("");
   const [optionValue, setOptionValue] = React.useState("");
@@ -37,6 +38,8 @@ export const PollAdd = ({
   const [stateOption13, setStateOption13] = React.useState(false);
   const [stateOption14, setStateOption14] = React.useState(false);
 
+  const params = useParams();
+
   const addPoll = async (e) => {
     let preOptionValues = [];
     preOptionValues.push(
@@ -52,28 +55,62 @@ export const PollAdd = ({
       optionValue9
     );
     const OptionValues = preOptionValues.filter((element) => element !== "");
-    const obj = {
-      order: activeItem.tasks.length + 1,
-      listId: activeItem.id,
-      active: "section_rigthbtn",
-      text: `<h1><span style="color: rgb(102, 163, 224);">Опция:</span><span style="background-color: rgb(204, 224, 245); color: rgb(102, 163, 224);"> ${inputValue}
-        </span></h1>`,
-      documentId: 0,
-      completed: false,
-      pollId: [],
-      pollOptions: OptionValues,
-      pollQuestion: inputValue,
-      optionsReply: [],
-    };
-    await axios
-      .post("http://95.163.234.208:3500/tasks", obj)
-      .then(({ data }) => {
-        onAddTask(Number(activeItem.id), data, taskIdAdd);
-      })
-      .catch((e) => {
-        console.log(e);
-        alert("Ошибка при добавлении задачи!");
+    if (taskIdAdd === null) {
+      await axios
+        .post("http://95.163.234.208:7000/api/lection/addpoll", {
+          order: materials.length + 1,
+          owner: params.id,
+          text: `<h1><span style="color: rgb(102, 163, 224);">Опрос:</span><span style="background-color: rgb(204, 224, 245); color: rgb(102, 163, 224);"> ${inputValue}
+          </span></h1>`,
+          documentId: 0,
+          pollId: [],
+          pollOptions: OptionValues,
+          pollQuestion: inputValue,
+          optionsReply: [],
+        })
+        .then(() => getMaterials())
+        .catch((e) => {
+          console.log(e);
+          alert("Ошибка при добавлении материала!");
+        });
+    } else {
+      await materials.forEach((material) => {
+        if (Number(material.order) >= Number(taskIdAdd)) {
+          axios
+            .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
+              ...material,
+              _id: material._id,
+              owner: params.id,
+              order: material.order + 1,
+            })
+            .then(() => getMaterials())
+            .catch((e) => {
+              console.log(e);
+              alert("Ошибка при добавлении материала!");
+            });
+        }
       });
+      await axios
+        .post("http://95.163.234.208:7000/api/lection/addpoll", {
+          order: taskIdAdd,
+          owner: params.id,
+          text: `<h1><span style="color: rgb(102, 163, 224);">Опрос:</span><span style="background-color: rgb(204, 224, 245); color: rgb(102, 163, 224);"> ${inputValue}
+          </span></h1>`,
+          documentId: 0,
+          pollId: [],
+          pollOptions: OptionValues,
+          pollQuestion: inputValue,
+          optionsReply: [],
+        })
+        .then(() => {
+          getMaterials();
+        })
+        .catch((e) => {
+          console.log(e);
+          alert("Ошибка при добавлении материала!");
+        });
+    }
+
     setPollActive(false);
     setInputValue("");
     setOptionValue("");
@@ -102,6 +139,7 @@ export const PollAdd = ({
     setStateOption13(false);
     setStateOption14(false);
   };
+
   return (
     <div
       className={pollActive ? "modal active" : "modal"}

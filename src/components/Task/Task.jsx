@@ -66,12 +66,8 @@ export const Task = ({
     await axios
       .get("http://95.163.234.208:7000/api/list/getlist", {})
       .then((res) => {
-        console.log(res);
         const lection = res.data.find((lection) => lection._id === params.id);
         let usersID = lection.usersId;
-        if (material.pollOptions.length !== 0) {
-          setPoll(true);
-        }
         if (material.pollOptions.length === 0) {
           try {
             const boldText = material.text.split("**").join("!!!");
@@ -262,62 +258,75 @@ export const Task = ({
           }
         } else {
           try {
-            let arr = [];
-            activeLection.usersId.forEach(async (ids) => {
-              await axios
-                .post(`https://api.telegram.org/bot${token}/sendPoll`, {
-                  chat_id: Number(ids),
-                  question: pollQuestion,
-                  options: pollOptions,
-                  is_anonymous: false,
-                })
-                .then(async (data) => {
-                  arr.push(data.data.result.poll.id);
-                  axios.patch(
-                    `http://95.163.234.208:7000/api/list/updatelist/`,
-                    {
-                      ...activeLection,
-                      usersId: usersID,
-                      pollId: arr,
+            if (usersID.length !== 0) {
+              let arr = [];
+              usersID.forEach(async (ids) => {
+                await axios
+                  .post(`https://api.telegram.org/bot${token}/sendPoll`, {
+                    chat_id: Number(ids),
+                    question: pollQuestion,
+                    options: pollOptions,
+                    is_anonymous: false,
+                  })
+                  .then(async (data) => {
+                    arr.push(data.data.result.poll.id);
+                    if (material.pollOptions.length !== 0) {
+                      setPoll(true);
                     }
+                    axios
+                      .patch(
+                        "http://95.163.234.208:7000/api/lection/updatematerial",
+                        {
+                          ...material,
+                          pollId: arr,
+                        }
+                      )
+                      .then(() => getMaterials());
+                  })
+                  .then((res) => {
+                    axios
+                      .get(
+                        `http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`
+                      )
+                      .then((res) => {
+                        axios
+                          .patch(
+                            "http://95.163.234.208:7000/api/lection/updatematerial",
+                            {
+                              ...material,
+                              complete: true,
+                              pollId: arr,
+                            }
+                          )
+                          .then(() => {
+                            getMaterials();
+                          });
+                        axios
+                          .patch(
+                            "http://95.163.234.208:7000/api/list/updatelist/",
+                            {
+                              ...activeLection,
+                              usersId: usersID,
+                              published: res.data.published + 1,
+                            }
+                          )
+                          .then((res) =>
+                            setCompleteMaterial(res.data.published + 1)
+                          );
+                      })
+                      .catch((err) =>
+                        alert(`Непредвиденная ошибка! Ошибка: ${err}`)
+                      );
+                  })
+                  .catch((err) =>
+                    alert(`Непредвиденная ошибка! Ошибка: ${err}`)
                   );
-                })
-                .then((res) => {
-                  axios
-                    .get(
-                      `http://95.163.234.208:7000/api/list/getlist/${activeLection._id}`
-                    )
-                    .then((res) => {
-                      axios
-                        .patch(
-                          "http://95.163.234.208:7000/api/lection/updatematerial",
-                          {
-                            ...material,
-                            complete: true,
-                          }
-                        )
-                        .then(() => {
-                          getMaterials();
-                        });
-                      axios
-                        .patch(
-                          "http://95.163.234.208:7000/api/list/updatelist/",
-                          {
-                            ...activeLection,
-                            usersId: usersID,
-                            published: res.data.published + 1,
-                          }
-                        )
-                        .then((res) =>
-                          setCompleteMaterial(res.data.published + 1)
-                        );
-                    })
-                    .catch((err) =>
-                      alert(`Непредвиденная ошибка! Ошибка: ${err}`)
-                    );
-                })
-                .catch((err) => alert(`Непредвиденная ошибка! Ошибка: ${err}`));
-            });
+              });
+            } else {
+              alert(
+                `Публикация опроса невозможна, так как список пользователей лекции "${activeLection.name}" пуст!`
+              );
+            }
           } catch (err) {
             console.log(err);
           }

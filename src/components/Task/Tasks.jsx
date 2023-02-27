@@ -107,10 +107,11 @@ export const Tasks = ({
               taskIdAdd={taskIdAdd}
             />
             <PollAdd
-              taskIdAdd={taskIdAdd}
-              activeItem={activeLection}
+              materials={materials}
               pollActive={pollActive}
               setPollActive={setPollActive}
+              taskIdAdd={taskIdAdd}
+              getMaterials={getMaterials}
             />
             {activeLection ? (
               materials ? (
@@ -200,38 +201,40 @@ export const Tasks = ({
             <div className="section_number">
               {completeMaterial}/{materials?.length}
             </div>
-            {activeLection
-              ? activeLection.lections.map((task) => {
-                  let abc = task.optionsReply?.reduce((acc, el) => {
-                    acc[el] = (acc[el] || 0) + 1;
-                    return acc;
-                  }, {});
-                  return task.pollId || poll ? (
-                    task.pollId?.length !== 0 || poll ? (
-                      <>
-                        <div className="section_rightText">
-                          Опрос {task.pollQuestion}
-                        </div>
-                        <div className="section_number">
-                          {task.pollOptions?.map((poll, i) =>
-                            abc[String(i)] !== undefined ? (
-                              <>
-                                {poll} - {abc[String(i)]} голос(а)(ов)
-                                <br />
-                              </>
-                            ) : (
-                              <>
-                                {poll} - 0 голосов
-                                <br />
-                              </>
-                            )
-                          )}
-                        </div>
-                      </>
-                    ) : null
-                  ) : null;
-                })
-              : null}
+            <div className="section_overflowpoll">
+              {materials
+                ? materials.map((task) => {
+                    let abc = task.optionsReply?.reduce((acc, el) => {
+                      acc[el] = (acc[el] || 0) + 1;
+                      return acc;
+                    }, {});
+                    return task.pollId || poll ? (
+                      task.pollId?.length !== 0 || poll ? (
+                        <>
+                          <div className="section_rightText">
+                            Опрос {task.pollQuestion}
+                          </div>
+                          <div className="section_number">
+                            {task.pollOptions?.map((poll, i) =>
+                              abc[String(i)] !== undefined ? (
+                                <>
+                                  {poll} - {abc[String(i)]} голос(а)(ов)
+                                  <br />
+                                </>
+                              ) : (
+                                <>
+                                  {poll} - 0 голосов
+                                  <br />
+                                </>
+                              )
+                            )}
+                          </div>
+                        </>
+                      ) : undefined
+                    ) : undefined;
+                  })
+                : undefined}
+            </div>
           </div>
         </>
       ) : (

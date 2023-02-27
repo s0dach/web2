@@ -117,7 +117,6 @@ export const AddTask = ({
     const lastFinishedText = firstFinishedText.split(".jpg)").join(".jpg>");
     let id = 0;
     if (taskIdAdd === null) {
-      console.log(materials.length);
       await axios
         .post("http://95.163.234.208:7000/api/lection/addmaterial", {
           order: materials.length + 1,
@@ -138,7 +137,6 @@ export const AddTask = ({
         });
     } else {
       await materials.forEach((material) => {
-        console.log(material);
         if (Number(material.order) >= Number(taskIdAdd)) {
           axios
             .patch("http://95.163.234.208:7000/api/lection/updatematerial", {
