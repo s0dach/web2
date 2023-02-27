@@ -118,14 +118,15 @@ export const Lists = () => {
     });
   };
 
-  const editTitle = (listId, listName) => {
-    const newTitle = window.prompt("Название лекции", listName);
+  const editTitle = (lection) => {
+    const newTitle = window.prompt("Новое название лекции", lection.name);
     if (newTitle) {
-      onEditListTitle(listId, newTitle);
       axios
-        .patch("http://95.163.234.208:3500/lists/" + listId, {
+        .patch("http://95.163.234.208:7000/api/list/updatelist/", {
+          ...lection,
           name: newTitle,
         })
+        .then(() => getList())
         .catch((e) => {
           alert("Не удалось обновить название лекции");
           console.log(e);
@@ -195,11 +196,7 @@ export const Lists = () => {
                             {lection.name}
                           </div>
                           <div className="flexTable">
-                            <div
-                              onClick={() =>
-                                editTitle(lection.id, lection.name)
-                              }
-                            >
+                            <div onClick={() => editTitle(lection)}>
                               <EditCircle />
                             </div>
                             <div onClick={() => removeList(lection._id)}>
