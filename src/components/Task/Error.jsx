@@ -11,7 +11,7 @@ export const Error = ({ errorText, setErrorModal, errorModal }) => {
           height="38"
         />
         <span className="Modaltitle">Возникла ошибка!</span>
-        <p className="modalp">{errorText}</p>
+        <p className="modalparag">{errorText}</p>
         <div className="modalbutton" onClick={() => setErrorModal(false)}>
           Хорошо
         </div>
