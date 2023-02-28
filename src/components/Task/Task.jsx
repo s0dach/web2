@@ -10,7 +10,6 @@ export const Task = ({
   setEditMaterialText,
   setActiveModalEdit,
   material,
-  lections,
   setPollActive,
   pollQuestion,
   taskText,
@@ -19,7 +18,6 @@ export const Task = ({
   taskOrderId,
   documentId,
   setTaskIdAdd,
-  setPoll,
   getMaterials,
   setCompleteMaterial,
   index,
@@ -283,9 +281,6 @@ export const Task = ({
                   })
                   .then(async (data) => {
                     arr.push(data.data.result.poll.id);
-                    if (material.pollOptions.length !== 0) {
-                      setPoll(true);
-                    }
                     axios
                       .patch(
                         "http://95.163.234.208:7000/api/lection/updatematerial",

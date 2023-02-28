@@ -51,18 +51,18 @@ export const Header = ({
       })
       .then(() => {
         materials.forEach((mat) => {
-          axios.patch(
-            "http://95.163.234.208:7000/api/lection/updatematerial/",
-            {
+          axios
+            .patch("http://95.163.234.208:7000/api/lection/updatematerial/", {
               ...mat,
               optionsReply: [],
               pollId: [],
               complete: false,
-            }
-          );
+            })
+            .then(() => {
+              getMaterials();
+              getList();
+            });
         });
-        getList();
-        getMaterials();
       });
   };
 

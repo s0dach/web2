@@ -591,8 +591,9 @@ ul {
 }
 
 .modalError {
+  padding: 10px;
   position: absolute;
-  width: 280px;
+  max-width: 280px;
   height: 210px;
   background: #fff;
   border-radius: 3px;

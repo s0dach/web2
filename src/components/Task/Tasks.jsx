@@ -24,7 +24,6 @@ export const Tasks = ({
   const [addTaskActive, setAddTaskActive] = React.useState(false);
   const [activeLection, setActiveLection] = React.useState(null);
   const [pollActive, setPollActive] = React.useState(false);
-  const [poll, setPoll] = React.useState(false);
   const [taskIdAdd, setTaskIdAdd] = React.useState(null);
   const [completeMaterial, setCompleteMaterial] = React.useState(0);
 
@@ -148,7 +147,6 @@ export const Tasks = ({
                             taskText={material.text}
                             setAddTaskActive={setAddTaskActive}
                             key={material._id}
-                            setPoll={setPoll}
                           />
                         ))}
                         {provided.placeholder}
@@ -212,8 +210,8 @@ export const Tasks = ({
                       acc[el] = (acc[el] || 0) + 1;
                       return acc;
                     }, {});
-                    return task.pollId || poll ? (
-                      task.pollId?.length !== 0 || poll ? (
+                    return task.pollId ? (
+                      task.pollId?.length !== 0 ? (
                         <>
                           <div className="section_rightText">
                             Опрос {task.pollQuestion}
